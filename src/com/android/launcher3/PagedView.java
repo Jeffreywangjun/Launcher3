@@ -543,10 +543,10 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     }
     protected void pageBeginMoving() {
         if (!mIsPageMoving) {
-            Trace.traceBegin(Trace.TRACE_TAG_INPUT, "pageBeginMoving");
+            //Trace.traceBegin(Trace.TRACE_TAG_INPUT, "pageBeginMoving");  // wangjun delete ---for compling on AS
             mIsPageMoving = true;
             onPageBeginMoving();
-            Trace.traceEnd(Trace.TRACE_TAG_INPUT);
+            //Trace.traceEnd(Trace.TRACE_TAG_INPUT);  // wangjun delete ---for compling on AS
         }
     }
 
@@ -1180,11 +1180,12 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         if (pageCount > 0) {
             int halfScreenSize = getViewportWidth() / 2;
             int screenCenter = getScrollX() + halfScreenSize;
-
+// wangjun delete ---for compling on AS
+/*
             Trace.traceBegin(Trace.TRACE_TAG_VIEW, "PagedView.dispatchDraw: mScrollX = "
                 + getScrollX());
             Trace.traceEnd(Trace.TRACE_TAG_VIEW);
-
+*/
             if (LauncherLog.DEBUG_DRAW) {
                 LauncherLog.d(TAG, "dispatchDraw: mScrollX = " + getScrollX()
                     + ", screenCenter = " + screenCenter + ", mMaxScrollX = "

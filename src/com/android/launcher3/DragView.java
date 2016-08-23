@@ -363,14 +363,17 @@ public class DragView extends View {
      */
     void move(int touchX, int touchY) {
         /// M: Add systrace to track drag icon latency{@
+         // wangjun delete ---__JEF_COMPILE_PASS__
+         /*
         Trace.traceCounter(Trace.TRACE_TAG_INPUT, "posX", touchX);
         Trace.traceCounter(Trace.TRACE_TAG_INPUT, "posY", touchY);
-        Trace.traceBegin(Trace.TRACE_TAG_INPUT, "move");
+        Trace.traceBegin(Trace.TRACE_TAG_INPUT, "move"); 
+        */
         /// M: @}
         setTranslationX(touchX - mRegistrationX + (int) mOffsetX);
         setTranslationY(touchY - mRegistrationY + (int) mOffsetY);
         /// M: Add systrace to track drag icon latency{@
-        Trace.traceEnd(Trace.TRACE_TAG_INPUT);
+      //  Trace.traceEnd(Trace.TRACE_TAG_INPUT);   // wangjun delete ---__JEF_COMPILE_PASS__
         /// M: @}
     }
 

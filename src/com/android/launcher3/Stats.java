@@ -26,7 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.SystemProperties;
+//import android.os.SystemProperties;   // wangjun delete ---__JEF_COMPILE_PASS__
 import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
@@ -112,8 +112,8 @@ public class Stats {
     private final String mLaunchBroadcastPermission;
 
     /// M: Do not need to record launch info in user/userdebug build.
-    private static final boolean IS_USER_BUILD =
-        !SystemProperties.get("ro.build.type").equals("eng");
+    private static final boolean IS_USER_BUILD =true;
+      //  !SystemProperties.get("ro.build.type").equals("eng"); // wangjun delete ---__JEF_COMPILE_PASS__
 
     public Stats(Launcher launcher) {
         mLauncher = launcher;

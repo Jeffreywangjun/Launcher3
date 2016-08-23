@@ -141,11 +141,13 @@
             android:label="@string/toggle_weight_watcher"
             android:enabled="@bool/debug_memory_enabled"
             android:icon="@mipmap/ic_launcher_home">
+<!-- wangjun delete  - for running error on AS
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+-->
         </activity>
 
         <activity
@@ -183,6 +185,7 @@
         </activity>
 
         <!-- Debugging tools -->
+<!-- wangjun delete  - for running error on AS        
         <activity
             android:name="com.android.launcher3.MemoryDumpActivity"
             android:theme="@android:style/Theme.NoDisplay"
@@ -197,7 +200,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+-->
         <service android:name="com.android.launcher3.MemoryTracker"
             android:enabled="@bool/debug_memory_enabled"
             >

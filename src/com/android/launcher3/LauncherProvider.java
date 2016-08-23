@@ -49,7 +49,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
 import android.os.StrictMode;
-import android.os.SystemProperties;
+//import android.os.SystemProperties;  // wangjun delete ---__JEF_COMPILE_PASS__
 import android.os.UserManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -92,9 +92,12 @@ public class LauncherProvider extends ContentProvider {
     @Thunk DatabaseHelper mOpenHelper;
 
     /// M: Indicate whether the device is Tablet or not
-    private static boolean sIsTablet = ("tablet".equals(
-            SystemProperties.get("ro.build.characteristics")));
+// wangjun add ---__JEF_COMPILE_PASS__
+  //  private static boolean sIsTablet = ("tablet".equals(
+ //           SystemProperties.get("ro.build.characteristics")));
 
+    private static boolean sIsTablet = false;
+//  end ---__JEF_COMPILE_PASS__
     @Override
     public boolean onCreate() {
         LauncherLog.d(TAG, "(LauncherProvider)onCreate");

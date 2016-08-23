@@ -19,4 +19,10 @@ package com.android.launcher3.config;
 public class ProviderConfig {
 
     public static final String AUTHORITY = "com.android.launcher3.settings".intern();
+
+    public static final String ACTION_UNREAD_CHANGED = "com.mediatek.action.UNREAD_CHANGED";
+
+    public static final String EXTRA_UNREAD_NUMBER = "com.mediatek.intent.extra.UNREAD_NUMBER";
+
+    public static final String EXTRA_UNREAD_COMPONENT = "com.mediatek.intent.extra.UNREAD_COMPONENT";
 }

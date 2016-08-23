@@ -34,7 +34,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.opengl.GLUtils;
 import android.os.Build;
-import android.os.SystemProperties;
+//import android.os.SystemProperties;  // wangjun delete ---__JEF_COMPILE_PASS__
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.content.ContentResolver;
@@ -56,7 +56,7 @@ import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 
-import com.mediatek.dcfdecoder.DcfDecoder;
+//import com.mediatek.dcfdecoder.DcfDecoder;  // wangjun delete ---__JEF_COMPILE_PASS__
 
 
 
@@ -170,8 +170,8 @@ public class BitmapRegionTileSource implements TiledImageRenderer.TileSource {
     // due to decodePreview being allowed to be up to 2x the size of the target
     private static final int MAX_PREVIEW_SIZE = GL_SIZE_LIMIT / 2;
 
-    private static final boolean mIsOmaDrmSupport =
-        SystemProperties.getInt("ro.mtk_oma_drm_support", 0) == 1;
+    private static final boolean mIsOmaDrmSupport =false;
+        //SystemProperties.getInt("ro.mtk_oma_drm_support", 0) == 1;// wangjun delete ---__JEF_COMPILE_PASS__
 
     public static abstract class BitmapSource {
         private SimpleBitmapRegionDecoder mDecoder;
@@ -637,7 +637,8 @@ public class BitmapRegionTileSource implements TiledImageRenderer.TileSource {
             return null;
         }
 
-        DcfDecoder dcfDecoder = new DcfDecoder();
-        return dcfDecoder.forceDecryptFile(filePath, consume);
+        //DcfDecoder dcfDecoder = new DcfDecoder();
+        //return dcfDecoder.forceDecryptFile(filePath, consume);  // wangjun delete ---__JEF_COMPILE_PASS__
+        return null;
     }
 }

@@ -31,7 +31,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.SystemProperties;
+//import android.os.SystemProperties;   // wangjun delete ---__JEF_COMPILE_PASS__
 import android.util.Log;
 import android.widget.Toast;
 
@@ -93,8 +93,8 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Boolean> {
     int mCropHeight;
     static final int WALLPAPER_CROP_REGION_SIZE_LIMIT = 2048;
 
-    private static final boolean mIsOmaDrmSupport =
-          SystemProperties.getInt("ro.mtk_oma_drm_support", 0) == 1;
+    private static final boolean mIsOmaDrmSupport =false;
+   //       SystemProperties.getInt("ro.mtk_oma_drm_support", 0) == 1;   // wangjun delete ---__JEF_COMPILE_PASS__
     ///M.
 
     public BitmapCropTask(Context c, String filePath,

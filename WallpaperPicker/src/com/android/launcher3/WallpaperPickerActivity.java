@@ -90,7 +90,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.mediatek.drm.OmaDrmStore;
+// import com.mediatek.drm.OmaDrmStore;   // wangjun delete ---__JEF_COMPILE_PASS__
 
 public class WallpaperPickerActivity extends WallpaperCropActivity {
     static final String TAG = "Launcher.WallpaperPickerActivity";
@@ -155,8 +155,8 @@ public class WallpaperPickerActivity extends WallpaperCropActivity {
             intent.setType("image/*");
 
             ///M: Filter DRM files.
-            intent.putExtra(OmaDrmStore.DrmExtra.EXTRA_DRM_LEVEL,
-                    OmaDrmStore.DrmExtra.LEVEL_FL);
+          //  intent.putExtra(OmaDrmStore.DrmExtra.EXTRA_DRM_LEVEL,
+           //         OmaDrmStore.DrmExtra.LEVEL_FL);   // wangjun delete ---__JEF_COMPILE_PASS__
 
             a.startActivityForResultSafely(intent, IMAGE_PICK);
         }
@@ -1316,9 +1316,9 @@ public class WallpaperPickerActivity extends WallpaperCropActivity {
             if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 if (!shouldShowRequestPermissionRationale(
                         Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(this,
-                            com.mediatek.internal.R.string.denied_required_permission,
-                            Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(this,
+                  //          com.mediatek.internal.R.string.denied_required_permission,
+                   //         Toast.LENGTH_SHORT).show();   // wangjun delete ---__JEF_COMPILE_PASS__
                 }
                 finish();
             } else {

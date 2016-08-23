@@ -52,7 +52,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
-import android.os.Trace;
+//import android.os.Trace;  // wangjun delete ---__JEF_COMPILE_PASS__
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
@@ -1140,22 +1140,22 @@ public class Workspace extends PagedView
         }
         switch (ev.getAction() & MotionEvent.ACTION_MASK) {
         case MotionEvent.ACTION_DOWN:
-            Trace.traceBegin(Trace.TRACE_TAG_INPUT, "Workspace.ACTION_DOWN");
+           // Trace.traceBegin(Trace.TRACE_TAG_INPUT, "Workspace.ACTION_DOWN");// wangjun delete ---__JEF_COMPILE_PASS__
             mXDown = ev.getX();
             mYDown = ev.getY();
             mTouchDownTime = System.currentTimeMillis();
-            Trace.traceEnd(Trace.TRACE_TAG_INPUT);
+          //  Trace.traceEnd(Trace.TRACE_TAG_INPUT);// wangjun delete ---__JEF_COMPILE_PASS__
             break;
         case MotionEvent.ACTION_POINTER_UP:
         case MotionEvent.ACTION_UP:
-            Trace.traceBegin(Trace.TRACE_TAG_INPUT, "Workspace.ACTION_UP");
+          //  Trace.traceBegin(Trace.TRACE_TAG_INPUT, "Workspace.ACTION_UP");// wangjun delete ---__JEF_COMPILE_PASS__
             if (mTouchState == TOUCH_STATE_REST) {
                 final CellLayout currentPage = (CellLayout) getChildAt(mCurrentPage);
                 if (currentPage != null) {
                     onWallpaperTap(ev);
                 }
             }
-            Trace.traceEnd(Trace.TRACE_TAG_INPUT);
+      //      Trace.traceEnd(Trace.TRACE_TAG_INPUT);// wangjun delete ---__JEF_COMPILE_PASS__
         }
         return super.onInterceptTouchEvent(ev);
     }
@@ -2178,11 +2178,11 @@ public class Workspace extends PagedView
 
     @Override
     public void onLauncherTransitionEnd(Launcher l, boolean animated, boolean toWorkspace) {
-        Trace.traceBegin(Trace.TRACE_TAG_INPUT, "Workspace.onLauncherTransitionEnd");
+     //   Trace.traceBegin(Trace.TRACE_TAG_INPUT, "Workspace.onLauncherTransitionEnd");// wangjun delete ---__JEF_COMPILE_PASS__
         mIsSwitchingState = false;
         updateChildrenLayersEnabled(false);
         showCustomContentIfNecessary();
-        Trace.traceEnd(Trace.TRACE_TAG_INPUT);
+     //   Trace.traceEnd(Trace.TRACE_TAG_INPUT);// wangjun delete ---__JEF_COMPILE_PASS__
     }
 
     void updateCustomContentVisibility() {

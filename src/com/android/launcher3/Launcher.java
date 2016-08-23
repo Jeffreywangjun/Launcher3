@@ -115,6 +115,7 @@ import com.android.launcher3.compat.LauncherActivityInfoCompat;
 import com.android.launcher3.compat.LauncherAppsCompat;
 import com.android.launcher3.compat.UserHandleCompat;
 import com.android.launcher3.compat.UserManagerCompat;
+import com.android.launcher3.config.ProviderConfig;   // wangjun delete ---for __COMPILE_PASS__
 import com.android.launcher3.model.WidgetsModel;
 import com.android.launcher3.util.ComponentKey;
 import com.android.launcher3.util.LongArrayMap;
@@ -465,11 +466,11 @@ public class Launcher extends Activity
     public static final String PROP_DISABLE_APPLIST_WHITE_BG = "launcher.whitebg.disable";
     // should kill and restart launcher process to re-execute static block if reset properties
     // adb shell setprop launcher.applist.whitebg.disable true/false
-    // adb shell stop
+    // adb shell stop`
     // adb shell start
     static {
-        DISABLE_APPLIST_WHITE_BG =
-            android.os.SystemProperties.getBoolean(PROP_DISABLE_APPLIST_WHITE_BG, true);
+        DISABLE_APPLIST_WHITE_BG =true;
+//            android.os.SystemProperties.getBoolean(PROP_DISABLE_APPLIST_WHITE_BG, true);  // wangjun delete ---__JEF_COMPILE_PASS__
     }
     /// @}
 
@@ -530,7 +531,12 @@ public class Launcher extends Activity
             mUnreadLoader = new MTKUnreadLoader(getApplicationContext());
             // Register unread change broadcast.
             IntentFilter filter = new IntentFilter();
+/* original code  wangjun ---__JEF_COMPILE_PASS__
             filter.addAction(Intent.ACTION_UNREAD_CHANGED);
+*/
+            filter.addAction(ProviderConfig.ACTION_UNREAD_CHANGED);
+// __JEF_COMPILE_PASS__
+
             registerReceiver(mUnreadLoader, filter);
             // initialize unread loader
             mUnreadLoader.initialize(this);
@@ -2753,7 +2759,7 @@ public class Launcher extends Activity
         // view has detached (it's possible for this to happen if the view is removed mid touch).
 
         /// M: add systrace to analyze application launche time.
-        Trace.traceBegin(Trace.TRACE_TAG_INPUT, "Launcher.onClick");
+       // Trace.traceBegin(Trace.TRACE_TAG_INPUT, "Launcher.onClick"); // wangjun delete ---__JEF_COMPILE_PASS__
 
         if (LauncherLog.DEBUG) {
             LauncherLog.d(TAG, "Click on view " + v);
@@ -2800,7 +2806,7 @@ public class Launcher extends Activity
             }
         }
         /// M: add systrace to analyze application launche time.
-        Trace.traceEnd(Trace.TRACE_TAG_INPUT);
+       // Trace.traceEnd(Trace.TRACE_TAG_INPUT);  // wangjun delete ---__JEF_COMPILE_PASS__
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -3238,8 +3244,8 @@ public class Launcher extends Activity
         } catch (SecurityException e) {
             /// M: Runtime permission check @ {
             if (Intent.ACTION_CALL.equals(intent.getAction())) {
-                Toast.makeText(this, com.mediatek.internal.R.string.denied_required_permission,
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, com.mediatek.internal.R.string.denied_required_permission,
+ //                       Toast.LENGTH_SHORT).show();  // wangjun delete ---__JEF_COMPILE_PASS__
             } else {
                 Toast.makeText(this, R.string.activity_not_found, Toast.LENGTH_SHORT).show();
             }
@@ -3617,14 +3623,14 @@ public class Launcher extends Activity
     }
 
     void showWorkspace(int snapToPage, boolean animated, Runnable onCompleteRunnable) {
-        Trace.traceBegin(Trace.TRACE_TAG_INPUT, "showWorkspace");
+       // Trace.traceBegin(Trace.TRACE_TAG_INPUT, "showWorkspace");  // wangjun delete ---__JEF_COMPILE_PASS__
         if (LauncherLog.DEBUG) {
             LauncherLog.d(TAG, "showWorkspace: animated = " + animated + ", mState = " + mState);
         }
 
         ///M: ALPS02461704, fix widget quick add JE.
         if (mWorkspace == null) {
-            Trace.traceEnd(Trace.TRACE_TAG_INPUT);
+       //     Trace.traceEnd(Trace.TRACE_TAG_INPUT);  // wangjun delete ---__JEF_COMPILE_PASS__
             return ;
         }
 
@@ -3653,7 +3659,7 @@ public class Launcher extends Activity
             getWindow().getDecorView()
                     .sendAccessibilityEvent(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
         }
-        Trace.traceEnd(Trace.TRACE_TAG_INPUT);
+      //  Trace.traceEnd(Trace.TRACE_TAG_INPUT);  // wangjun delete ---__JEF_COMPILE_PASS__
 
     }
 
@@ -5273,11 +5279,11 @@ public class Launcher extends Activity
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            Trace.traceBegin(Trace.TRACE_TAG_INPUT, "Launcher.dispatchTouchEvent:ACTION_DOWN");
+          //  Trace.traceBegin(Trace.TRACE_TAG_INPUT, "Launcher.dispatchTouchEvent:ACTION_DOWN");  // wangjun delete ---__JEF_COMPILE_PASS__
         } else if (ev.getAction() == MotionEvent.ACTION_UP) {
-            Trace.traceBegin(Trace.TRACE_TAG_INPUT, "Launcher.dispatchTouchEvent:ACTION_UP");
+          //  Trace.traceBegin(Trace.TRACE_TAG_INPUT, "Launcher.dispatchTouchEvent:ACTION_UP");  // wangjun delete ---__JEF_COMPILE_PASS__
         }
-        Trace.traceEnd(Trace.TRACE_TAG_INPUT);
+      //  Trace.traceEnd(Trace.TRACE_TAG_INPUT);  // wangjun delete ---__JEF_COMPILE_PASS__
         return super.dispatchTouchEvent(ev);
     }
 

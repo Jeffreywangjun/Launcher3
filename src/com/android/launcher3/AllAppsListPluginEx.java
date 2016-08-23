@@ -31,7 +31,7 @@ import android.util.Xml;
 import java.util.ArrayList;
 import java.io.IOException;
 
-import com.android.internal.util.XmlUtils;
+// import com.android.internal.util.XmlUtils;  // wangjun delete ---for compling on AS
 import com.mediatek.launcher3.ext.LauncherLog;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -86,7 +86,7 @@ class AllAppsListPluginEx {
         try {
             XmlResourceParser parser = context.getResources().getXml(R.xml.default_toppackage);
             AttributeSet attrs = Xml.asAttributeSet(parser);
-            XmlUtils.beginDocument(parser, TAG_TOPPACKAGES);
+            // XmlUtils.beginDocument(parser, TAG_TOPPACKAGES);  // wangjun delete ---for compling on AS
 
             final int depth = parser.getDepth();
 

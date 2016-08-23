@@ -19,7 +19,9 @@ import android.util.AttributeSet;
 import android.util.Xml;
 import android.view.View;
 
-import com.android.internal.util.XmlUtils;
+//import com.android.internal.util.XmlUtils;  // wangjun delete ---__JEF_COMPILE_PASS__
+import com.android.launcher3.config.ProviderConfig;
+
 import com.mediatek.launcher3.ext.LauncherLog;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -28,6 +30,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+
+import static com.android.launcher3.AutoInstallsLayout.beginDocument;  // wangjun add ---__JEF_COMPILE_PASS__
 
 class UnreadSupportShortcut {
     public UnreadSupportShortcut(String pkgName, String clsName, String keyString, int type) {
@@ -80,10 +84,12 @@ public class MTKUnreadLoader extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, final Intent intent) {
         final String action = intent.getAction();
-        if (Intent.ACTION_UNREAD_CHANGED.equals(action)) {
-            final ComponentName componentName = (ComponentName) intent
-                    .getExtra(Intent.EXTRA_UNREAD_COMPONENT);
-            final int unreadNum = intent.getIntExtra(Intent.EXTRA_UNREAD_NUMBER, -1);
+// wangjun modify ---__JEF_COMPILE_PASS__
+        if (ProviderConfig.ACTION_UNREAD_CHANGED.equals(action)) {
+            ComponentName componentName = (ComponentName) intent
+                    .getExtras().get(ProviderConfig.EXTRA_UNREAD_COMPONENT);
+            final int unreadNum = intent.getIntExtra(ProviderConfig.EXTRA_UNREAD_NUMBER, -1);
+// __JEF_COMPILE_PASS__
             if (LauncherLog.DEBUG) {
                 LauncherLog.d(TAG, "Receive unread broadcast: componentName = " + componentName
                         + ", unreadNum = " + unreadNum + ", mCallbacks = " + mCallbacks
@@ -180,7 +186,7 @@ public class MTKUnreadLoader extends BroadcastReceiver {
             XmlResourceParser parser = mContext.getResources().getXml(
                     R.xml.unread_support_shortcuts);
             AttributeSet attrs = Xml.asAttributeSet(parser);
-            XmlUtils.beginDocument(parser, TAG_UNREADSHORTCUTS);
+            beginDocument(parser, TAG_UNREADSHORTCUTS);  // wangjun modify ---__JEF_COMPILE_PASS__
 
             final int depth = parser.getDepth();
 
