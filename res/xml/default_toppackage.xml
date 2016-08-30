@@ -15,7 +15,7 @@
 -->
 
 
-<toppackages xmlns:launcher="http://schemas.android.com/apk/res/com.android.launcher3">
+<toppackages xmlns:launcher="http://schemas.android.com/apk/res/com.rgk.launcher3">
     <app
         launcher:topPackageName="com.yahoo.mobile.client.android.odp"
         launcher:topClassName="com.yahoo.mobile.client.android.odp.YahooODP"

@@ -118,7 +118,7 @@ public class Stats {
     public Stats(Launcher launcher) {
         mLauncher = launcher;
         mLaunchBroadcastPermission =
-                launcher.getResources().getString(R.string.receive_launch_broadcasts_permission);
+                launcher.getResources().getString(R.string.receive_launch_broadcasts_permission_rgk);
 
         if (DEBUG_BROADCASTS) {
             launcher.registerReceiver(

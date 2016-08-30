@@ -4559,7 +4559,7 @@ public class Launcher extends Activity
     private void sendLoadingCompleteBroadcastIfNecessary() {
         if (!mSharedPrefs.getBoolean(FIRST_LOAD_COMPLETE, false)) {
             String permission =
-                    getResources().getString(R.string.receive_first_load_broadcast_permission);
+                    getResources().getString(R.string.receive_first_load_broadcast_permission_rgk);
             Intent intent = new Intent(ACTION_FIRST_LOAD_COMPLETE);
             sendBroadcast(intent, permission);
             SharedPreferences.Editor editor = mSharedPrefs.edit();

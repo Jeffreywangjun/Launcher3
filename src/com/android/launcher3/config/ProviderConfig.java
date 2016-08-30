@@ -18,7 +18,7 @@ package com.android.launcher3.config;
 
 public class ProviderConfig {
 
-    public static final String AUTHORITY = "com.android.launcher3.settings".intern();
+    public static final String AUTHORITY = "com.android.launcher3.settings.rgk".intern();
 
     public static final String ACTION_UNREAD_CHANGED = "com.mediatek.action.UNREAD_CHANGED";
 

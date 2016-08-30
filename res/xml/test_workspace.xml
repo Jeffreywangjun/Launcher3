@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 
-<favorites xmlns:launcher="http://schemas.android.com/apk/res/com.android.launcher3">
+<favorites xmlns:launcher="http://schemas.android.com/apk/res/com.rgk.launcher3">
     <!-- Far-left screen [0] -->
     <clock
         launcher:screen="0"
