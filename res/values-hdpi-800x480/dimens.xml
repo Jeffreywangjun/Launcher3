@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <dimen name="rgk_distance">320dp</dimen>
+    <dimen name="angleview_outer_radius">270dp</dimen>
+</resources>

@@ -28,4 +28,6 @@
     <dimen name="unread_text_margin">8dp</dimen>
     <dimen name="unread_text_number_size">14sp</dimen>
     <dimen name="unread_text_plus_size">10sp</dimen>
+    <dimen name="rgk_distance">335dp</dimen>
+    <dimen name="angleview_outer_radius">285dp</dimen>
 </resources>
