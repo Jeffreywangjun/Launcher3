@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.launcher3.t9.T9SearchLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#8e030a09">
+
+    <TextView
+        android:id="@+id/search_result_prompt_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="38dip"
+        android:gravity="center"
+        android:text=""
+        android:singleLine="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/search_emmpy"
+        android:layout_width="match_parent"
+        android:layout_height="38dip"
+        android:gravity="center"
+        android:text="拼音、语音查找应用"
+        android:layout_above="@+id/mt9view"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <GridView
+        android:id="@+id/t9_search_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnWidth="80dp"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/search_result_prompt_text_view"
+        android:layout_above="@+id/mt9view" />
+
+    <com.android.launcher3.t9.util.T9View
+        android:id="@+id/mt9view"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+    </com.android.launcher3.t9.util.T9View>
+
+</com.android.launcher3.t9.T9SearchLayout>

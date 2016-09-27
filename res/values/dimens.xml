@@ -228,4 +228,16 @@
     <dimen name="angleindicator_theme_innersize">90px</dimen>
     <dimen name="angleindicator_theme_outersize">186px</dimen>
     <!--add by luoran(end)-->
+    <!--t9 start-->
+    <dimen name="icon_width">54dp</dimen>
+    <dimen name="padding">4dp</dimen>
+    <dimen name="icon_height">54dp</dimen>
+    <dimen name="margin">4dp</dimen>
+
+    <dimen name="key_text_size">20sp</dimen>
+    <dimen name="search_toast_text_size">20sp</dimen>
+    <dimen name="app_item_wh">60dp</dimen>
+    <dimen name="app_icon_wh">48dp</dimen>
+    <dimen name="toast_text_size">20sp</dimen>
+    <!--t9 end-->
 </resources>

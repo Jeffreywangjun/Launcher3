@@ -146,6 +146,7 @@ public class LauncherModel extends BroadcastReceiver
 
     // < only access in worker thread >
     AllAppsList mBgAllAppsList;
+    public static  ArrayList<AppInfo> allAddAppItems = new ArrayList<AppInfo>();//add by zhaopenglin for t9
     // Entire list of widgets.
     WidgetsModel mBgWidgetsModel;
 
@@ -3019,6 +3020,7 @@ public class LauncherModel extends BroadcastReceiver
             }
             // Huh? Shouldn't this be inside the Runnable below?
             final ArrayList<AppInfo> added = mBgAllAppsList.added;
+            allAddAppItems = mBgAllAppsList.added;  //add by zhaopenglin for t9
             mBgAllAppsList.added = new ArrayList<AppInfo>();
 
             // Post callback on main thread

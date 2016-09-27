@@ -307,4 +307,11 @@
     <string name="bluetooth_on">bluetooth is turned on</string>
     <string name="bluetooth_off">bluetooth is turned off</string>
     <!--add by luoran(end)-->
+<!--t9 start-->
+    <string name="t9_app_name">MyT9Search</string>
+    <string name="app_can_not_be_launched_directly">该应用无法被直接启动</string>
+    <string name="the_app_has_been_launched">该应用已经打开</string>
+    <string name="can_not_to_uninstall_yourself">无法卸载自己</string>
+    <string name="long_click_start_voice">长按可语音搜索应用</string>
+<!--t9 end-->
 </resources>

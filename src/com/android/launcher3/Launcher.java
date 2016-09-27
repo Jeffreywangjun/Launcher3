@@ -118,6 +118,7 @@ import com.android.launcher3.compat.UserManagerCompat;
 import com.android.launcher3.config.ProviderConfig;   // wangjun delete ---for __COMPILE_PASS__
 import com.android.launcher3.model.WidgetsModel;
 import com.android.launcher3.service.RgkSateLiteService;
+import com.android.launcher3.t9.AppInfoHelper;
 import com.android.launcher3.util.ComponentKey;
 import com.android.launcher3.util.LongArrayMap;
 import com.android.launcher3.util.Thunk;
@@ -291,6 +292,7 @@ public class Launcher extends Activity
 
     private View mAllAppsButton;
     private View mWidgetsButton;
+    private View t9View; //Add by zhaopenglin for t9 20160920
 
     private SearchDropTargetBar mSearchDropTargetBar;
 
@@ -1572,7 +1574,18 @@ public class Launcher extends Activity
         mWorkspace = (Workspace) mDragLayer.findViewById(R.id.workspace);
         mWorkspace.setPageSwitchListener(this);
         mPageIndicators = mDragLayer.findViewById(R.id.page_indicator);
+        //Add by zhaopenglin for t9 20160920 start
+        t9View = mInflater.inflate(R.layout.activity_main, null);
+        t9View.findViewById(R.id.key10Back).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exitT9View();
+            }
+        });
 
+        mDragLayer.addView(t9View);
+        t9View.setVisibility(View.INVISIBLE);
+        //Add by zhaopenglin for t9 20160920 end
         mLauncherView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         mWorkspaceBackgroundDrawable = getResources().getDrawable(R.drawable.workspace_bg);
@@ -2125,6 +2138,7 @@ public class Launcher extends Activity
         if (DEBUG_RESUME_TIME) {
             startTime = System.currentTimeMillis();
         }
+        exitT9View();//Add by zhaopenglin for t9 20160920
         super.onNewIntent(intent);
         if (LauncherLog.DEBUG) {
             LauncherLog.d(TAG, "onNewIntent: intent = " + intent);
@@ -2723,14 +2737,21 @@ public class Launcher extends Activity
 
         return super.dispatchKeyEvent(event);
     }
-
+    //Add by zhaopenglin for t9 20160920 start
+    private void exitT9View(){
+        if(t9View != null && t9View.getVisibility() == View.VISIBLE){
+            t9View.setVisibility(View.INVISIBLE);
+            showWorkspaceSearchAndHotseat();
+        }
+    }
+    //Add by zhaopenglin for t9 20160920 end
     @Override
     public void onBackPressed() {
         if (LauncherLog.DEBUG) {
             LauncherLog.d(TAG, "Back key pressed, mState = " + mState
                     + ", mOnResumeState = " + mOnResumeState);
         }
-
+        exitT9View();//Add by zhaopenglin for t9 20160920
         if (mLauncherCallbacks != null && mLauncherCallbacks.handleBackPressed()) {
             return;
         }
@@ -2831,7 +2852,7 @@ public class Launcher extends Activity
         if (v instanceof CellLayout) {
             if (mWorkspace.isInOverviewMode()) {
                 showWorkspace(mWorkspace.indexOfChild(v), true);
-            }
+            }else doubleclick();//add by zhaopenglin for double click launch t9
         }
 
         Object tag = v.getTag();
@@ -2853,7 +2874,25 @@ public class Launcher extends Activity
         /// M: add systrace to analyze application launche time.
         // Trace.traceEnd(Trace.TRACE_TAG_INPUT);  // wangjun delete ---__JEF_COMPILE_PASS__
     }
+    //add by zhaopenglin for double click launch t9 start
+    private int count = 0;
+    private long firstClick = 0;
 
+    private void doubleclick() {
+        long temp = System.currentTimeMillis();
+        if(temp - firstClick > 300){
+            firstClick = temp;
+            count = 1;
+        }else {
+            count++;
+            if(2 == count) {
+                hideWorkspaceSearchAndHotseat();
+                t9View.setVisibility(View.VISIBLE);
+                AppInfoHelper.getInstance().setBaseAllAppInfos(LauncherModel.allAddAppItems);
+            }
+        }
+    }
+    //add by zhaopenglin for double click launch t9 end
     @SuppressLint("ClickableViewAccessibility")
     public boolean onTouch(View v, MotionEvent event) {
         return false;

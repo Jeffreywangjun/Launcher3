@@ -45,7 +45,7 @@ dependencies {
     compile 'com.android.support:support-v4:+'
     compile 'com.android.support:recyclerview-v7:+'
     compile 'com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-2'
-    compile fileTree(include:'*.jar',dir:'libs')
+    compile fileTree(include: '*.jar', dir: 'libs')
 }
 
 protobuf {

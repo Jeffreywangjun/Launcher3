@@ -90,4 +90,13 @@
     <color name="text_gray">#c8c8c8</color>
     <color name="text_white_unclick">#9fffffff</color>
     <color name="text_gray_unclick">#9fc8c8c8</color>
+
+    <!--t9 start-->
+    <color name="icon_text_color">#ffffffff</color>
+    <color name="white_smoke">#FFF5F5F5</color>
+    <color name="black">#FF000000</color>
+
+    <color name="key_text_color">#aa000000</color>
+    <color name="key_text_color1">#44000000</color>
+    <!--t9 end-->
 </resources>
