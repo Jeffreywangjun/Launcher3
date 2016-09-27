@@ -521,14 +521,12 @@ public class RgkLayout extends FrameLayout implements
                     // 这个地方判断点击的位置坐标
                     float upDistance = (float) Math.sqrt(Math.pow((upX - 0), 2)
                             + Math.pow((upY - mHeight), 2));
-
-                    Log.d("LUORAN", "upDistance:" + (upY - mHeight));
                     Log.d("LUORAN",
                             "mAngleView.getMeasuredHeight():"
                                     + mAngleView.getMeasuredHeight());
                     // 加这个判断是防止在外部区域滑动的时候可能会关闭view
-                    if ((upTime - mLastTime) < 100
-                            && (upDistance > mAngleView.getMeasuredHeight())) {
+                    if (Math.abs(upX - mLastMotionX) < 8 && Math.abs(upY - mLastMotionY) < 8 &&
+                            (upTime - mLastTime) < 200 && (upDistance > mAngleView.getMeasuredHeight()))  {
                         if (mEditState == STATE_EDIT) {
 
                             // 退出编辑模式
@@ -543,11 +541,12 @@ public class RgkLayout extends FrameLayout implements
                 } else if (mAngleView.isRight()) {
                     float upDistance = (float) Math.sqrt(Math
                             .pow((upX - mWidth), 2) + Math.pow((upY - mHeight), 2));
-                    if ((upTime - mLastTime) < 200
-                            && (upDistance > mAngleView.getMeasuredHeight())) {
+                    if (Math.abs(upX - mLastMotionX) < 8 && Math.abs(upY - mLastMotionY) < 8 &&
+                            (upTime - mLastTime) < 200 && (upDistance > mAngleView.getMeasuredHeight())) {
                         if (mEditState == STATE_EDIT) {
                             setEditState(RgkLayout.STATE_NORMAL);
                         } else {
+                            Log.d("LUORAN","off()");
                             // 点击外部去与关闭RgkLayout
                             off();
                         }
