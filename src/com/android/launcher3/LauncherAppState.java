@@ -204,6 +204,9 @@ public class LauncherAppState {
     public PowerManager getPowerManager() {
         return mPowerManager;
     }
+	public static boolean isDisableAllApps() {
+       return true;
+   }
 
     ///M: ALPS02275072, Add this function for refersh InvariantDeviceProfile
     public void RenewInvariantDeviceProfile() {

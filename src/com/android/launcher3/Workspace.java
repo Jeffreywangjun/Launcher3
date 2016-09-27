@@ -4159,17 +4159,17 @@ public class Workspace extends PagedView
 
     @Override
     public boolean supportsFlingToDelete() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsAppInfoDropTarget() {
         return false;
     }
 
     @Override
-    public boolean supportsDeleteDropTarget() {
+    public boolean supportsAppInfoDropTarget() {
         return true;
+    }
+
+    @Override
+    public boolean supportsDeleteDropTarget() {
+        return false;
     }
 
     @Override
