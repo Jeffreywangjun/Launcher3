@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.launcher3.view.RgkLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/anglelayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.android.launcher3.view.RgkAngleViewTheme
+        android:id="@+id/angleview_theme"
+        android:layout_width="@dimen/angleview_size"
+        android:layout_height="@dimen/angleview_size" />
+
+    <com.android.launcher3.view.RgkIndicatorViewTheme
+        android:id="@+id/indicator_theme"
+        android:layout_width="@dimen/angleindicator_theme_size"
+        android:layout_height="@dimen/angleindicator_theme_size" />
+
+    <com.android.launcher3.view.RgkIndicatorView
+        android:id="@+id/indicator"
+        android:layout_width="@dimen/angleindicator_size"
+        android:layout_height="@dimen/angleindicator_size" />
+
+    <com.android.launcher3.view.RgkView
+        android:id="@+id/angleview"
+        android:layout_width="@dimen/angleview_size"
+        android:layout_height="@dimen/angleview_size" />
+
+    <com.android.launcher3.view.RgkCornerView
+        android:id="@+id/corner_view"
+        android:layout_width="@dimen/anglelogo_size"
+        android:layout_height="@dimen/anglelogo_size" />
+
+</com.android.launcher3.view.RgkLayout>

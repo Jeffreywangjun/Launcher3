@@ -25,7 +25,9 @@ import com.android.launcher3.config.ProviderConfig;
  * Settings related utilities.
  */
 public class LauncherSettings {
-    /** Columns required on table staht will be subject to backup and restore. */
+    /**
+     * Columns required on table staht will be subject to backup and restore.
+     */
     static interface ChangeLogColumns extends BaseColumns {
         /**
          * The time of the last update to this row.
@@ -51,7 +53,7 @@ public class LauncherSettings {
 
         /**
          * The type of the gesture
-         *
+         * <p/>
          * <P>Type: INTEGER</P>
          */
         public static final String ITEM_TYPE = "itemType";
@@ -103,7 +105,7 @@ public class LauncherSettings {
 
     /**
      * Workspace Screens.
-     *
+     * <p/>
      * Tracks the order of workspace screens.
      */
     public static final class WorkspaceScreens implements ChangeLogColumns {
@@ -129,7 +131,11 @@ public class LauncherSettings {
     public static final class Favorites implements BaseLauncherColumns {
 
         public static final String TABLE_NAME = "favorites";
+        //add by luoran(start)
+        public static final String SATELITE_TABLE_NAME = "satelitefavorites";
 
+        public static final String SATELITE_RECENT_TABLE_NAME = "sateliterecentfavorites";
+        //add by luoran(end)
         /**
          * The content:// style URL for this table
          */
@@ -140,7 +146,6 @@ public class LauncherSettings {
          * The content:// style URL for a given row, identified by its id.
          *
          * @param id The row id.
-         *
          * @return The unique content URL for the specified row.
          */
         public static Uri getContentUri(long id) {
@@ -162,9 +167,12 @@ public class LauncherSettings {
 
         static final String containerToString(int container) {
             switch (container) {
-                case CONTAINER_DESKTOP: return "desktop";
-                case CONTAINER_HOTSEAT: return "hotseat";
-                default: return String.valueOf(container);
+                case CONTAINER_DESKTOP:
+                    return "desktop";
+                case CONTAINER_HOTSEAT:
+                    return "hotseat";
+                default:
+                    return String.valueOf(container);
             }
         }
 
@@ -202,7 +210,7 @@ public class LauncherSettings {
 
         /**
          * The profile id of the item in the cell.
-         * <P>
+         * <p/>
          * Type: INTEGER
          * </P>
          */
@@ -214,12 +222,12 @@ public class LauncherSettings {
         public static final int ITEM_TYPE_FOLDER = 2;
 
         /**
-        * The favorite is a live folder
-        *
-        * Note: live folders can no longer be added to Launcher, and any live folders which
-        * exist within the launcher database will be ignored when loading.  That said, these
-        * entries in the database may still exist, and are not automatically stripped.
-        */
+         * The favorite is a live folder
+         * <p/>
+         * Note: live folders can no longer be added to Launcher, and any live folders which
+         * exist within the launcher database will be ignored when loading.  That said, these
+         * entries in the database may still exist, and are not automatically stripped.
+         */
         @Deprecated
         static final int ITEM_TYPE_LIVE_FOLDER = 3;
 
@@ -253,18 +261,18 @@ public class LauncherSettings {
 
         /**
          * The appWidgetId of the widget
-         *
+         * <p/>
          * <P>Type: INTEGER</P>
          */
         public static final String APPWIDGET_ID = "appWidgetId";
 
         /**
          * The ComponentName of the widget provider
-         *
+         * <p/>
          * <P>Type: STRING</P>
          */
         public static final String APPWIDGET_PROVIDER = "appWidgetProvider";
-        
+
         /**
          * Indicates whether this favorite is an application-created shortcut or not.
          * If the value is 0, the favorite is not an application-created shortcut, if the

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<favorites xmlns:wellswipe="http://schemas.android.com/apk/res-auto/com.android.launcher3" >
+
+    <!-- 拨号 -->
+    <!-- -moto g -->
+    <favorite
+        wellswipe:satelite_item_index="0"
+        wellswipe:satelite_packageName="com.android.dialer" />
+
+    <!-- 短信 -->
+    <!-- -moto g -->
+    <favorite
+        wellswipe:satelite_className="com.android.mms.ui.ConversationList"
+        wellswipe:satelite_item_index="1"
+        wellswipe:satelite_packageName="com.android.mms" />
+    <!-- 系统设置 -->
+    <favorite
+        wellswipe:satelite_className="com.android.settings.Settings"
+        wellswipe:satelite_item_index="2"
+        wellswipe:satelite_packageName="com.android.settings" />
+    <!-- 相机 -->
+
+    <favorite
+        wellswipe:satelite_className="com.android.camera.Camera"
+        wellswipe:satelite_item_index="3"
+        wellswipe:satelite_packageName="com.android.camera" />
+    <!-- 闹钟 -->
+    <!-- -moto g -->
+    <favorite
+        wellswipe:satelite_className="com.android.deskclock.DeskClock"
+        wellswipe:satelite_item_index="4"
+        wellswipe:satelite_packageName="com.android.deskclock" />
+
+    <!-- 计算器 -->
+    <favorite
+        wellswipe:satelite_className="com.android.calculator2.Calculator"
+        wellswipe:satelite_item_index="5"
+        wellswipe:satelite_packageName="com.android.calculator2" />
+    <!-- 相册 -->
+
+    <favorite
+        wellswipe:satelite_className="com.android.gallery3d.app.GalleryActivity"
+        wellswipe:satelite_item_index="6"
+        wellswipe:satelite_packageName="com.android.gallery3d" />
+
+    <!-- 日历 -->
+    <favorite
+        wellswipe:satelite_className="com.android.calendar.AllInOneActivity"
+        wellswipe:satelite_item_index="7"
+        wellswipe:satelite_packageName="com.android.calendar" />
+
+    <!-- 浏览器 -->
+
+    <favorite
+        wellswipe:satelite_className="com.android.browser.BrowserActivity"
+        wellswipe:satelite_item_index="8"
+        wellswipe:satelite_packageName="com.android.browser" />
+
+    <quicksswitch
+        wellswipe:satelite_item_action="@string/rgk_flash"
+        wellswipe:satelite_item_index="0"
+        wellswipe:satelite_item_title="@string/rgk_flash_title" />
+    <quicksswitch
+        wellswipe:satelite_item_action="@string/rgk_wifi"
+        wellswipe:satelite_item_index="1"
+        wellswipe:satelite_item_title="@string/rgk_wifi_title" />
+    <quicksswitch
+        wellswipe:satelite_item_action="@string/rgk_screenbrightness"
+        wellswipe:satelite_item_index="2"
+        wellswipe:satelite_item_title="@string/rgk_screenbrightness_title" />
+    <quicksswitch
+        wellswipe:satelite_item_action="@string/rgk_mute"
+        wellswipe:satelite_item_index="3"
+        wellswipe:satelite_item_title="@string/rgk_mute_title" />
+    <quicksswitch
+        wellswipe:satelite_item_action="@string/rgk_bluetooth"
+        wellswipe:satelite_item_index="4"
+        wellswipe:satelite_item_title="@string/rgk_bluetooth_title" />
+    <quicksswitch
+        wellswipe:satelite_item_action="@string/rgk_autorotation"
+        wellswipe:satelite_item_index="5"
+        wellswipe:satelite_item_title="@string/rgk_autorotation_title" />
+    <quicksswitch
+        wellswipe:satelite_item_action="@string/rgk_setting"
+        wellswipe:satelite_item_index="6"
+        wellswipe:satelite_item_title="@string/rgk_setting_title" />
+    <quicksswitch
+        wellswipe:satelite_item_action="@string/rgk_flightmode"
+        wellswipe:satelite_item_index="7"
+        wellswipe:satelite_item_title="@string/rgk_flightmode_title" />
+    <quicksswitch
+        wellswipe:satelite_item_action="@string/rgk_calculator"
+        wellswipe:satelite_item_index="8"
+        wellswipe:satelite_item_title="@string/rgk_calculator_title" />
+
+</favorites>

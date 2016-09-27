@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 * Copyright (C) 2008 The Android Open Source Project
 *
@@ -60,10 +59,10 @@
     <!-- Loading apps text. [CHAR_LIMIT=50] -->
     <string name="all_apps_loading_message">Loading Apps&#8230;</string>
     <!-- No-search-results text. [CHAR_LIMIT=50] -->
-    <string name="all_apps_no_search_results">No Apps found matching \"<xliff:g id="query" example="Android">%1$s</xliff:g>\"</string>
+    <string name="all_apps_no_search_results">No Apps found matching \"<xliff:g example="Android" id="query">%1$s</xliff:g>\"</string>
     <!-- Search market text.  This is a format string where the first argument is the name of the activity
          handling the search.  The format string does not need to handle both of these arguments. [CHAR_LIMIT=50] -->
-    <string name="all_apps_search_market_message">Go to <xliff:g id="query" example="Play Store">%1$s</xliff:g></string>
+    <string name="all_apps_search_market_message">Go to <xliff:g example="Play Store" id="query">%1$s</xliff:g></string>
 
     <!-- Drag and drop -->
     <skip />
@@ -104,7 +103,7 @@
         shortcuts in Home.</string>
 
     <!-- Widgets: -->
-    <skip />    
+    <skip />
 
     <!-- Text to show user in place of a gadget when we can't display it properly -->
     <string name="gadget_error_text">Problem loading widget</string>
@@ -146,7 +145,7 @@
 
     <!-- Folder accessibility -->
     <!-- The format string for when a folder is opened, speaks the dimensions -->
-    <string name="folder_opened">Folder opened, <xliff:g id="width" example="5">%1$d</xliff:g> by <xliff:g id="height" example="3">%2$d</xliff:g></string>
+    <string name="folder_opened">Folder opened, <xliff:g example="5" id="width">%1$d</xliff:g> by <xliff:g example="3" id="height">%2$d</xliff:g></string>
     <!-- Instruction that clicking outside will close folder -->
     <string name="folder_tap_to_close">Touch to close folder</string>
     <!-- Instruction that clicking outside will commit folder rename -->
@@ -154,9 +153,9 @@
     <!-- Indication that folder closed -->
     <string name="folder_closed">Folder closed</string>
     <!-- Folder renamed format -->
-    <string name="folder_renamed">Folder renamed to <xliff:g id="name" example="Games">%1$s</xliff:g></string>
+    <string name="folder_renamed">Folder renamed to <xliff:g example="Games" id="name">%1$s</xliff:g></string>
     <!-- Folder name format -->
-    <string name="folder_name_format">Folder: <xliff:g id="name" example="Games">%1$s</xliff:g></string>
+    <string name="folder_name_format">Folder: <xliff:g example="Games" id="name">%1$s</xliff:g></string>
 
     <!-- Debug-only activity name. [DO NOT TRANSLATE] -->
     <string name="debug_memory_activity">* HPROF</string>
@@ -188,7 +187,7 @@
         You can remove it, or search for the app and install it manually.
     </string>
 
-<!-- Strings for accessibility actions -->
+    <!-- Strings for accessibility actions -->
     <!-- Accessibility action to add an app to workspace. [CHAR_LIMIT=30] -->
     <string name="action_add_to_workspace">Add to Home screen</string>
 
@@ -205,28 +204,28 @@
     <string name="action_move">Move item</string>
 
     <!-- Accessibility description to move item to empty cell. -->
-    <string name="move_to_empty_cell">Move to row <xliff:g id="number" example="1">%1$s</xliff:g> column <xliff:g id="number" example="1">%2$s</xliff:g></string>
+    <string name="move_to_empty_cell">Move to row <xliff:g example="1" id="number">%1$s</xliff:g> column <xliff:g example="1" id="number">%2$s</xliff:g></string>
 
     <!-- Accessibility description to move item inside a folder. -->
-    <string name="move_to_position">Move to position <xliff:g id="number" example="1">%1$s</xliff:g></string>
+    <string name="move_to_position">Move to position <xliff:g example="1" id="number">%1$s</xliff:g></string>
 
     <!-- Accessibility description to move item to the hotseat. -->
-    <string name="move_to_hotseat_position">Move to favorites position <xliff:g id="number" example="1">%1$s</xliff:g></string>
+    <string name="move_to_hotseat_position">Move to favorites position <xliff:g example="1" id="number">%1$s</xliff:g></string>
 
     <!-- Accessibility confirmation for item move. -->
     <string name="item_moved">Item moved</string>
 
     <!-- Accessibility description to move item into an existing folder. -->
-    <string name="add_to_folder">Add to folder: <xliff:g id="name" example="Games">%1$s</xliff:g></string>
+    <string name="add_to_folder">Add to folder: <xliff:g example="Games" id="name">%1$s</xliff:g></string>
 
     <!-- Accessibility description to move item into an existing folder containing an app. -->
-    <string name="add_to_folder_with_app">Add to folder with <xliff:g id="name" example="Messenger">%1$s</xliff:g></string>
+    <string name="add_to_folder_with_app">Add to folder with <xliff:g example="Messenger" id="name">%1$s</xliff:g></string>
 
     <!-- Accessibility confirmation for item added to folder. -->
     <string name="added_to_folder">Item added to folder</string>
 
     <!-- Accessibility description to create folder with another item. -->
-    <string name="create_folder_with">Create folder with: <xliff:g id="name" example="Game">%1$s</xliff:g></string>
+    <string name="create_folder_with">Create folder with: <xliff:g example="Game" id="name">%1$s</xliff:g></string>
 
     <!-- Accessibility confirmation for folder created. -->
     <string name="folder_created">Folder created</string>
@@ -259,7 +258,53 @@
     <string name="action_decrease_height">Decrease height</string>
 
     <!-- Accessibility confirmation for widget resize. -->
-    <string name="widget_resized">Widget resized to width <xliff:g id="number" example="2">%1$s</xliff:g> height <xliff:g id="number" example="1">%2$s</xliff:g></string>
+    <string name="widget_resized">Widget resized to width <xliff:g example="2" id="number">%1$s</xliff:g> height <xliff:g example="1" id="number">%2$s</xliff:g></string>
 
     <string name="rgk_launcher">RLauncher</string>
+
+    <!--add by luoran(start)-->
+    <string name="app_name">Sate Lite</string>
+    <string name="recent">Recent</string>
+    <string name="frequent">Frequent</string>
+    <string name="toolbox">quick tools</string>
+    <string name="ok_title">Ok</string>
+    <string name="cancel_title">Cancel</string>
+
+    <!-- QuickSwitch_ACTION -->
+    <string name="rgk_flash">com.well.swipe.action.flash</string>
+    <string name="rgk_wifi">com.well.swipe.action.wifi</string>
+    <string name="rgk_screenbrightness">com.well.swipe.action.screenbrightness</string>
+    <string name="rgk_calculator">com.well.swipe.action.calculator</string>
+    <string name="rgk_flightmode">com.well.swipe.action.flightmode</string>
+    <string name="rgk_rgksetting">com.well.swipe.action.rgksetting</string>
+    <string name="rgk_bluetooth">com.well.swipe.action.bluetooth</string>
+    <string name="rgk_mute">com.well.swipe.action.mute</string>
+    <string name="rgk_autorotation">com.well.swipe.action.autorotation</string>
+    <string name="rgk_setting">com.well.swipe.action.setting</string>
+    <!-- QuickSwitch_ACTION_TITLE -->
+    <string name="rgk_flash_title">Flashlight</string>
+    <string name="rgk_wifi_title">Wi-Fi</string>
+    <string name="rgk_screenbrightness_title">Brightness</string>
+    <string name="rgk_data_title">Data</string>
+    <string name="rgk_calculator_title">Calculator</string>
+    <string name="rgk_flightmode_title">Airplane mode</string>
+    <string name="rgk_bluetooth_title">Bluetooth</string>
+    <string name="rgk_mute_title">Sound</string>
+    <string name="rgk_autorotation_title">Rotation</string>
+    <string name="rgk_setting_title">Settings</string>
+    <string name="rgk_edit_header_title">selected(%1$s/%2$s)</string>
+    <string name="favorite_up_to_9">up to 9</string>
+    <string name="scene_mode_0">Vibrator</string>
+    <string name="scene_mode_1">Muted</string>
+    <string name="scene_mode_2">volume</string>
+    <string name="rgk_advanced_setting">Advanced Settings</string>
+    <string name="feedback_title">fill in the title</string>
+    <string name="feedback_content">fill in the content</string>
+    <string name="flash_on">Flashlight is turned on</string>
+    <string name="flash_off">Flashlight is turned off</string>
+    <string name="wifi_on">WiFi is connected</string>
+    <string name="wifi_off">WiFi is disconnected</string>
+    <string name="bluetooth_on">bluetooth is turned on</string>
+    <string name="bluetooth_off">bluetooth is turned off</string>
+    <!--add by luoran(end)-->
 </resources>

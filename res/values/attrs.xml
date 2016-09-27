@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /* Copyright 2008, The Android Open Source Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +16,7 @@
 -->
 
 <resources>
-	 <!-- XML attributes used by unread_support_shortcuts.xml -->
+    <!-- XML attributes used by unread_support_shortcuts.xml -->
     <declare-styleable name="UnreadShortcut">
         <attr name="unreadPackageName" format="string" />
         <attr name="unreadClassName" format="string" />
@@ -40,20 +39,20 @@
 
     <!-- Page Indicator specific attributes. -->
     <declare-styleable name="PageIndicator">
-        <attr name="windowSize" format="integer"  />
+        <attr name="windowSize" format="integer" />
     </declare-styleable>
 
     <!-- Workspace specific attributes. These attributes are used to customize
          the workspace in XML files. -->
     <declare-styleable name="Workspace">
         <!-- The first screen the workspace should display. -->
-        <attr name="defaultScreen" format="integer"  />
+        <attr name="defaultScreen" format="integer" />
         <!-- The number of horizontal cells in the CellLayout -->
-        <attr name="cellCountX" format="integer"  />
+        <attr name="cellCountX" format="integer" />
         <!-- The number of vertical cells in the CellLayout -->
-        <attr name="cellCountY" format="integer"  />
+        <attr name="cellCountY" format="integer" />
     </declare-styleable>
-    
+
     <!-- Hotseat specific attributes. These attributes are used to customize
          the hotseat in XML files. -->
     <declare-styleable name="Hotseat">
@@ -67,9 +66,9 @@
          a CellLayout view in XML files. -->
     <declare-styleable name="CellLayout">
         <!-- The width of a single cell -->
-        <attr name="cellWidth" format="dimension"  />
+        <attr name="cellWidth" format="dimension" />
         <!-- The height of a single cell -->
-        <attr name="cellHeight" format="dimension"  />
+        <attr name="cellHeight" format="dimension" />
         <!-- An override for the width and height gap to allow users to specify
              a specific size for the page using spacing instead of resolving the
              spacing from the width of the page -->
@@ -107,7 +106,7 @@
         <attr name="y" format="string" />
         <attr name="spanX" format="string" />
         <attr name="spanY" format="string" />
-        <attr name="icon" format="reference" />  
+        <attr name="icon" format="reference" />
         <attr name="title" format="reference" />
         <attr name="uri" format="string" />
     </declare-styleable>
@@ -126,8 +125,8 @@
         <attr name="topPackageName" format="string" />
         <attr name="topClassName" format="string" />
         <attr name="topOrder" format="integer" />
-    </declare-styleable>  
-      
+    </declare-styleable>
+
     <declare-styleable name="PreloadIconDrawable">
         <attr name="background" format="reference" />
         <attr name="ringOutset" format="dimension" />
@@ -137,4 +136,16 @@
     <declare-styleable name="InsettableFrameLayout_Layout">
         <attr name="layout_ignoreInsets" format="boolean" />
     </declare-styleable>
+    <!--add by luoran(start)-->
+    <declare-styleable name="SateLiteFavorite">
+        <attr name="satelite_className" format="string" />
+        <attr name="satelite_packageName" format="string" />
+        <attr name="satelite_container" format="string" />
+        <attr name="satelite_item_index" format="integer" />
+        <attr name="satelite_item_icon" format="reference" />
+        <attr name="satelite_item_title" format="reference" />
+        <attr name="satelite_uri" format="string" />
+        <attr name="satelite_item_action" format="reference" />
+    </declare-styleable>
+    <!--add by luoran(end)-->
 </resources>

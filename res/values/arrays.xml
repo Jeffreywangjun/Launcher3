@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="rgk_tools_action_array">
+        <item>@string/rgk_flash</item>
+        <item>@string/rgk_wifi</item>
+        <item>@string/rgk_screenbrightness</item>
+        <item>@string/rgk_calculator</item>
+        <item>@string/rgk_flightmode</item>
+        <item>@string/rgk_bluetooth</item>
+        <item>@string/rgk_mute</item>
+        <item>@string/rgk_autorotation</item>
+        <item>@string/rgk_setting</item>
+    </array>
+    <array name="rgk_tools_title_array">
+        <item>@string/rgk_flash_title</item>
+        <item>@string/rgk_wifi_title</item>
+        <item>@string/rgk_screenbrightness_title</item>
+        <item>@string/rgk_calculator_title</item>
+        <item>@string/rgk_flightmode_title</item>
+        <item>@string/rgk_bluetooth_title</item>
+         <item>@string/rgk_mute_title</item>
+        <item>@string/rgk_autorotation_title</item>
+        <item>@string/rgk_setting_title</item>
+    </array>
+</resources>

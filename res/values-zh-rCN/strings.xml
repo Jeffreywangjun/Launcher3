@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<?xml version="1.0" encoding="UTF-8"?><!--
 /*
 * Copyright (C) 2008 The Android Open Source Project
 *
@@ -17,8 +16,7 @@
 */
  -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="application_name" msgid="5181331383435256801">"Launcher3"</string>
     <string name="folder_name" msgid="7371454440695724752"></string>
     <string name="work_folder_name" msgid="3753320833950115786">"Work"</string>
@@ -99,4 +97,33 @@
     <string name="action_decrease_width" msgid="1374549771083094654">"减小宽度"</string>
     <string name="action_decrease_height" msgid="282377193880900022">"减小高度"</string>
     <string name="widget_resized" msgid="9130327887929620">"小部件尺寸已调整为：宽度 <xliff:g id="NUMBER_0">%1$s</xliff:g>，高度 <xliff:g id="NUMBER_1">%2$s</xliff:g>"</string>
+
+    <string name="app_name">卫星菜单</string>
+    <string name="recent">最近应用</string>
+    <string name="frequent">常用应用</string>
+    <string name="toolbox">快捷工具</string>
+    <string name="ok_title">确认</string>
+    <string name="cancel_title">取消</string>
+    <!-- QuickSwitch_ACTION_TITLE -->
+    <string name="rgk_flash_title">手电筒</string>
+    <string name="rgk_wifi_title">无线网</string>
+    <string name="rgk_screenbrightness_title">亮度</string>
+    <string name="rgk_calculator_title">计算器</string>
+    <string name="rgk_flightmode_title">飞行模式</string>
+    <string name="rgk_bluetooth_title">蓝牙</string>
+    <string name="rgk_mute_title">声音</string>
+    <string name="rgk_autorotation_title">旋转</string>
+    <string name="rgk_setting_title">设置</string>
+    <string name="rgk_edit_header_title">已选择(%1$s/%2$s)</string>
+    <string name="favorite_up_to_9">最多只能选择9个</string>
+    <string name="scene_mode_0">振动</string>
+    <string name="scene_mode_1">静音</string>
+    <string name="scene_mode_2">铃声</string>
+    <string name="rgk_advanced_setting">设置</string>
+    <string name="flash_on">手电筒已经开启</string>
+    <string name="flash_off">手电筒已经关闭</string>
+    <string name="wifi_on">无线网已经开启</string>
+    <string name="wifi_off">无线网已经关闭</string>
+    <string name="bluetooth_on">蓝牙已经开启</string>
+    <string name="bluetooth_off">蓝牙已经关闭</string>
 </resources>

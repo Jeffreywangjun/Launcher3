@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.launcher3.view.AppsIndexView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/appindexview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/apps_index_item_key"
+        android:layout_width="@dimen/swipe_edit_keyitem_size"
+        android:layout_height="@dimen/swipe_edit_keyitem_size"
+        android:layout_marginLeft="@dimen/swipe_edit_keyitem_marginleft"
+        android:layout_marginRight="@dimen/swipe_edit_keyitem_marginleft"
+        android:background="@drawable/swipe_edit_listview_item_bg"
+        android:gravity="center"
+        android:textColor="@android:color/holo_green_light"
+        android:layout_marginTop="2dp"
+        android:visibility="visible"
+        android:textSize="20sp" />
+</com.android.launcher3.view.AppsIndexView>
