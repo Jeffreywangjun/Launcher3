@@ -281,7 +281,7 @@ public class WidgetsContainerView extends BaseContainerView
      */
     @Override
     public boolean supportsDeleteDropTarget() {
-        return false;
+        return true;
     }
 
     @Override
