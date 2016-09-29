@@ -24,8 +24,8 @@ public class RgkIndicatorView extends PositionStateView {
 
     private Paint[] mPaintArray = new Paint[]{mPaint0, mPaint1, mPaint2};
 
-    private String mColors[] = new String[]{"#0099cc", "#eaeaea", "#e1e1e1", "#d6d6d6", "#cac9c9",
-            "#bfbebe", "#b6b5b5", "#aeadad", "#a5a4a4", "#9c9c9c"};
+    private String mColors[] = new String[]{"#76EE00", "#eaeaea", "#e1e1e1", "#d6d6d6", "#cac9c9",
+            "#bfbebe", "#b6b5b5", "#aeadad", "#a5a4a4", "#FFFFFF"};
 
     private Paint mArcPaint;
 

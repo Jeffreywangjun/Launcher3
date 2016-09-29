@@ -12,7 +12,7 @@ import android.view.ViewConfiguration;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
-
+import android.view.animation.BounceInterpolator;
 import com.android.launcher3.Launcher;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
@@ -806,7 +806,7 @@ public class RgkLayout extends FrameLayout implements
         if (mSwitchType == SWITCH_TYPE_ON) {
 
             Log.d("HHRRR", "mSwitchType" + mSwitchType);
-            mAnimator.setInterpolator(new OvershootInterpolator(1.2f));
+            mAnimator.setInterpolator(new BounceInterpolator());
         } else if (mSwitchType == SWITCH_TYPE_OFF) {
             Log.d("HHRRR", "mSwitchType" + mSwitchType);
             mAnimator

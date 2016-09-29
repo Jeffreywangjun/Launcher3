@@ -7,13 +7,24 @@
 
     <!-- android:background="#d3000000" -->
 
-    <LinearLayout
+    <View
+        android:id="@+id/blurred_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.android.launcher3.view.BlurringView
+        android:id="@+id/blurring_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <!--<LinearLayout
         android:id="@+id/swipe_bg_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/anglelayout_background"
         android:orientation="vertical" >
-    </LinearLayout>
+    </LinearLayout>-->
 
     <include layout="@layout/rgk_sate_layout" />
 

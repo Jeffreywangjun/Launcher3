@@ -1318,7 +1318,7 @@ public class RgkView extends PositionStateView {
         mChangeAngle = 0;
         mAngleAnimator = ValueAnimator.ofFloat(start, end);
         mAngleAnimator.setDuration(500);
-        mAngleAnimator.setInterpolator(new OvershootInterpolator());
+        //mAngleAnimator.setInterpolator(new OvershootInterpolator());
         mAngleAnimator
                 .addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override

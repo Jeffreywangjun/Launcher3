@@ -135,14 +135,14 @@ public class RgkIndicatorViewTheme extends PositionStateView {
          * 4：是否显示半径连线
          */
         if (mPositionState == RgkPositionState.POSITION_STATE_LEFT) {
-            canvas.drawArc(mInneRectF, 270 + mLeftStartAngle + 6.4f, mUtilAngle * 1 - 2f, false, mBoundPaint);
-            
-            canvas.drawArc(mOuterRecF, 270 + mLeftStartAngle + 3.15f, mUtilAngle * 2 - 6.15f, false, mBoundPaint);
+            canvas.drawArc(mInneRectF, 270 + mLeftStartAngle + 6f, mUtilAngle * 1 - 0.8f, false, mBoundPaint);
+
+            canvas.drawArc(mOuterRecF, 270 + mLeftStartAngle + 3.5f, mUtilAngle * 2 - 7f, false, mBoundPaint);
             canvas.drawArc(mMindRectF, 270 + mLeftStartAngle, mUtilAngle * 2, false, mPaint);
             //canvas.drawRoundRect(5.1f,5.1f,5.1f,5.1f,2.45f,2.45f,mPaint);
         } else if (mPositionState == RgkPositionState.POSITION_STATE_RIGHT) {
-            canvas.drawArc(mInneRectF, 90 + mRightStartAngle + 6.4f, mUtilAngle * 1 - 2f, false, mBoundPaint);
-            canvas.drawArc(mOuterRecF, 90 + mRightStartAngle + 3.15f, mUtilAngle * 2 - 6.15f, false, mBoundPaint);
+            canvas.drawArc(mInneRectF, 90 + mRightStartAngle + 6f, mUtilAngle * 1 - 0.8f, false, mBoundPaint);
+            canvas.drawArc(mOuterRecF, 90 + mRightStartAngle + 3.5f, mUtilAngle * 2 - 7f, false, mBoundPaint);
             canvas.drawArc(mMindRectF, 90 + mRightStartAngle, mUtilAngle * 2, false, mPaint);
 
             //canvas.drawR
