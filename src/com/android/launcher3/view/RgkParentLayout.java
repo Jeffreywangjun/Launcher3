@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.app.WallpaperManager;
 import android.graphics.drawable.Drawable;
+
 import com.android.launcher3.R;
 import com.android.launcher3.utils.RgkSateLiteWindowManager;
 
@@ -26,7 +27,7 @@ public class RgkParentLayout extends RelativeLayout implements
 
     private RgkLayout mAngleLayout;
 
-   // private LinearLayout mBgLayout;
+    // private LinearLayout mBgLayout;
 
     private RgkSateLiteFavoriteDialog mFavoriteLayout;
 
@@ -145,10 +146,8 @@ public class RgkParentLayout extends RelativeLayout implements
     public boolean dispatchKeyEvent(KeyEvent event) {
         Log.d("LUORAN55", "RgkLayout.KEYCODE_BACK");
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK
-                || event.getKeyCode() == KeyEvent.KEYCODE_HOME
+                 || event.getKeyCode() == KeyEvent.KEYCODE_HOME
                 && event.getAction() != KeyEvent.ACTION_UP) {
-            Log.d("LUORAN55", "RgkLayout.KEYCODE_BACK");
-
             if (mFavoriteLayout.getVisibility() == VISIBLE) {
                 setEditFavoriteGone();
                 return true;
@@ -164,6 +163,13 @@ public class RgkParentLayout extends RelativeLayout implements
                 mAngleLayout.setEditState(RgkLayout.STATE_NORMAL);
                 return true;
             }
+            if (mAngleLayout.getEditState() == RgkLayout.STATE_NORMAL) {
+                Log.d("LUORAN55", "RgkLayout.STATE_NORMAL");
+                mAngleLayout.off();
+                return true;
+            }
+            return true;
+        }else if(event.getKeyCode() == KeyEvent.KEYCODE_MENU){
             if (mAngleLayout.getEditState() == RgkLayout.STATE_NORMAL) {
                 Log.d("LUORAN55", "RgkLayout.STATE_NORMAL");
                 mAngleLayout.off();
@@ -344,7 +350,7 @@ public class RgkParentLayout extends RelativeLayout implements
     }
 
 	/*
-	 * public void removeBubble() { mFavoriteLayout.setVisibility(View.GONE); }
+     * public void removeBubble() { mFavoriteLayout.setVisibility(View.GONE); }
 	 */
 
 }
