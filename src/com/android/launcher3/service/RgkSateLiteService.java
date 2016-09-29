@@ -77,6 +77,7 @@ public class RgkSateLiteService extends Service implements
     private ChangedReceiver mReceiver;
 
     private MobileContentObserver mObserver;
+    private MobileKeyEventReceiver mobileKeyEventReceiver;
 
     private Handler mHandler = new Handler();
     IBinder mBinder = new ServiceBind();
@@ -163,6 +164,11 @@ public class RgkSateLiteService extends Service implements
                         Settings.System
                                 .getUriFor(Settings.System.SCREEN_BRIGHTNESS_MODE),
                         false, mObserver);
+        //注册广播
+        mobileKeyEventReceiver = new MobileKeyEventReceiver();
+        final IntentFilter homeFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        registerReceiver(mobileKeyEventReceiver, homeFilter);
+
     }
 
     @Override
@@ -533,5 +539,34 @@ public class RgkSateLiteService extends Service implements
             mSwipeLayout.setEditToolsGone();
         }
     }
+
+    //按键监听
+    class MobileKeyEventReceiver extends BroadcastReceiver {
+
+        private static final String SYSTEM_DIALOG_REASON_KEY = "reason";
+
+        private static final String SYSTEM_DIALOG_REASON_RECENT_APPS = "recentapps";
+
+        private static final String SYSTEM_DIALOG_REASON_HOME = "homekey";
+
+        private static final String SYSTEM_DIALOG_REASON_LOCK = "lock";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String action = intent.getAction();
+            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+                String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
+                if (SYSTEM_DIALOG_REASON_HOME.equals(reason)) {
+                    mSwipeLayout.getAngleLayout().off();
+                } else if (SYSTEM_DIALOG_REASON_RECENT_APPS.equals(reason)) {
+                    mSwipeLayout.getAngleLayout().off();
+                } else if (SYSTEM_DIALOG_REASON_LOCK.equals(reason)) {
+                    mSwipeLayout.getAngleLayout().off();
+                }
+            }
+        }
+    }
+
 
 }
