@@ -75,6 +75,8 @@ import com.android.launcher3.accessibility.LauncherAccessibilityDelegate;
 import com.android.launcher3.accessibility.LauncherAccessibilityDelegate.AccessibilityDragSource;
 import com.android.launcher3.accessibility.OverviewScreenAccessibilityDelegate;
 import com.android.launcher3.compat.UserHandleCompat;
+import com.android.launcher3.preview.RGKMultiTouchController;
+import com.android.launcher3.preview.RGKPreference;
 import com.android.launcher3.util.LongArrayMap;
 import com.android.launcher3.util.Thunk;
 import com.android.launcher3.util.WallpaperUtils;
@@ -89,6 +91,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.android.launcher3.preview.RGKMultiTouchController.MultiTouchObjectCanvas;
+import com.android.launcher3.preview.RGKMultiTouchController.PointInfo;
+import com.android.launcher3.preview.RGKMultiTouchController.PositionAndScale;
 
 /**
  * The workspace is a wide area with a wallpaper and a finite number of pages.
@@ -98,8 +103,9 @@ import java.util.Iterator;
 public class Workspace extends PagedView
         implements DropTarget, DragSource, DragScroller, View.OnTouchListener,
         DragController.DragListener, LauncherTransitionable, ViewGroup.OnHierarchyChangeListener,
-        Insettable, UninstallSource, AccessibilityDragSource, Stats.LaunchSourceProvider {
-    private static final String TAG = "Launcher.Workspace";
+        Insettable, UninstallSource, AccessibilityDragSource, Stats.LaunchSourceProvider ,
+        MultiTouchObjectCanvas<Object> {// Add by yeyu for screen edit 20160910    
+		private static final String TAG = "Launcher.Workspace";
 
     private static boolean ENFORCE_DRAG_EVENT_ORDER = false;
 
@@ -284,6 +290,12 @@ public class Workspace extends PagedView
 
     // State related to Launcher Overlay
     LauncherOverlay mLauncherOverlay;
+    // Add by yeyu for screen edit 20160910 start
+    private RGKMultiTouchController<Object> multiTouchController;
+    private static final double ZOOM_SENSITIVITY = 1.6;
+    private static final double ZOOM_LOG_BASE_INV = 1.0 / Math.log(2.0 / ZOOM_SENSITIVITY);
+    private static boolean isMultiTouch = false;
+    // Add by yeyu for screen edit 20160910 end
     boolean mScrollInteractionBegan;
     boolean mStartedSendingScrollEvents;
     boolean mShouldSendPageSettled;
@@ -338,6 +350,11 @@ public class Workspace extends PagedView
         mOverviewModeShrinkFactor =
                 res.getInteger(R.integer.config_workspaceOverviewShrinkPercentage) / 100f;
         mOriginalDefaultPage = mDefaultPage = a.getInt(R.styleable.Workspace_defaultScreen, 1);
+        // Add by yeyu for screen edit 20160910 start
+        if (LauncherAppState.isSupportHomeScreenEdit()) {
+            mOriginalDefaultPage = mDefaultPage = mLauncher.getSharedPrefs().getInt(RGKPreference.KEY_DEFAULT_SCREEN, mOriginalDefaultPage);
+        }
+        // Add by yeyu for screen edit 20160910 end
         a.recycle();
 
         setOnHierarchyChangeListener(this);
@@ -474,6 +491,7 @@ public class Workspace extends PagedView
         setWallpaperDimension();
 
         setEdgeGlowColor(getResources().getColor(R.color.workspace_edge_effect_color));
+        multiTouchController = new RGKMultiTouchController<Object>(this, false);// Add by yeyu for screen edit 20160910
     }
 
     private void setupLayoutTransition() {
@@ -719,6 +737,11 @@ public class Workspace extends PagedView
     }
 
     private void convertFinalScreenToEmptyScreenIfNecessary() {
+        // Add by yeyu for screen edit 20160910 start
+        if (LauncherAppState.isSupportHomeScreenEdit()) {
+            return;
+        }
+        // Add by yeyu for screen edit 20160910 end
         if (mLauncher.isWorkspaceLoading()) {
             // Invalid and dangerous operation if workspace is loading
             Launcher.addDumpLog(TAG, "    - workspace loading, skip", true);
@@ -838,7 +861,7 @@ public class Workspace extends PagedView
     }
 
     public long commitExtraEmptyScreen() {
-        if (mLauncher.isWorkspaceLoading()) {
+        if (mLauncher.isWorkspaceLoading()&& !mLauncher.isWorkspacePreviewMode()) {//Modify by yeyu for screen edit 20160910
             // Invalid and dangerous operation if workspace is loading
             Launcher.addDumpLog(TAG, "    - workspace loading, skip", true);
             return -1;
@@ -893,6 +916,11 @@ public class Workspace extends PagedView
     }
 
     public void stripEmptyScreens() {
+        // Add by yeyu for screen edit 20160910 start
+        if (LauncherAppState.isSupportHomeScreenEdit()) {
+            return;
+        }
+        // Add by yeyu for screen edit 20160910 end
         if (mLauncher.isWorkspaceLoading()) {
             // Don't strip empty screens if the workspace is still loading.
             // This is dangerous and can result in data loss.
@@ -1138,6 +1166,13 @@ public class Workspace extends PagedView
             LauncherLog.d(TAG, "onInterceptTouchEvent: ev = " + ev
                 + ", mScrollX = " + getScrollX());
         }
+        // Add by yeyu for screen edit 20160910 start
+        if (LauncherAppState.isSupportHomeScreenEdit()) {
+            if (multiTouchController.onTouchEvent(ev)) {
+                return false;
+            }
+        }
+        // Add by yeyu for screen edit 20160910 end
         switch (ev.getAction() & MotionEvent.ACTION_MASK) {
         case MotionEvent.ACTION_DOWN:
            // Trace.traceBegin(Trace.TRACE_TAG_INPUT, "Workspace.ACTION_DOWN");// wangjun delete ---__JEF_COMPILE_PASS__
@@ -1149,6 +1184,12 @@ public class Workspace extends PagedView
         case MotionEvent.ACTION_POINTER_UP:
         case MotionEvent.ACTION_UP:
           //  Trace.traceBegin(Trace.TRACE_TAG_INPUT, "Workspace.ACTION_UP");// wangjun delete ---__JEF_COMPILE_PASS__
+            // Add by yeyu for screen edit 20160910 start
+            if (isMultiTouch) {
+                isMultiTouch = false;
+                return true;
+            }
+            // Add by yeyu for screen edit 20160910 end
             if (mTouchState == TOUCH_STATE_REST) {
                 final CellLayout currentPage = (CellLayout) getChildAt(mCurrentPage);
                 if (currentPage != null) {
@@ -4945,5 +4986,54 @@ public class Workspace extends PagedView
         mSpringLoadedDragController.cancel();
     }
     ///M.
+    // Add by yeyu for screen edit 20160910 start
+    public void setDefaultScreen(int screen) {
+        mDefaultPage = screen;
+    }
+
+    public int getDefaultScreen() {
+        return mDefaultPage;
+    }
+
+    public void deleteWorkspaceScreen(int deleteIndex) {
+        if (getChildAt(deleteIndex) == null) {
+            return;
+        }
+
+        removeViewAt(deleteIndex);
+        LauncherAppState.getLauncherProvider().deleteScreen(deleteIndex);
+        long id = mScreenOrder.get(deleteIndex);
+        mScreenOrder.remove(deleteIndex);
+        mWorkspaceScreens.remove(id);
+
+    }
+
+    @Override
+    public Object getDraggableObjectAtPoint(PointInfo pt) {
+        return this;
+    }
+
+    @Override
+    public void getPositionAndScale(Object obj, PositionAndScale objPosAndScaleOut) {
+        objPosAndScaleOut.set(0.0f, 0.0f, true, 1.0f, false, 0.0f, 0.0f, false, 0.0f);
+    }
+
+    @Override
+    public void selectObject(Object obj, PointInfo pt) {
+    }
+
+    @Override
+    public boolean setPositionAndScale(Object obj, PositionAndScale update, PointInfo touchPoint) {
+        float newRelativeScale = update.getScale();
+        int targetZoom = (int) Math.round(Math.log(newRelativeScale) * ZOOM_LOG_BASE_INV);
+        if (targetZoom < 0 && mState == State.NORMAL) {
+            isMultiTouch = true;
+            mLauncher.showPreviews();
+            invalidate();
+            return true;
+        }
+        return false;
+    }
+    // Add by yeyu for screen edit 20160910 end
 
 }

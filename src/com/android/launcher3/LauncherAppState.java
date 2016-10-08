@@ -49,6 +49,7 @@ public class LauncherAppState {
     private final WidgetPreviewLoader mWidgetCache;
 
     private boolean mWallpaperChangedSinceLastCheck;
+    private static boolean mSupportHomeScreenEdit = false;// Add by yeyu for screen edit 20160910
 
     private static WeakReference<LauncherProvider> sLauncherProvider;
     private static Context sContext;
@@ -121,7 +122,7 @@ public class LauncherAppState {
         UserManagerCompat.getInstance(sContext).enableAndResetCache();
 
         mPowerManager = (PowerManager) sContext.getSystemService(Context.POWER_SERVICE);
-
+        mSupportHomeScreenEdit = true;    // Add by yeyu for screen edit 20160910
     }
 
     /**
@@ -207,7 +208,11 @@ public class LauncherAppState {
 	public static boolean isDisableAllApps() {
        return true;
    }
-
+    // Add by yeyu for screen edit 20160910 start
+    public static boolean isSupportHomeScreenEdit() {
+        return mSupportHomeScreenEdit;
+    }
+    // Add by yeyu for screen edit 20160910 end
     ///M: ALPS02275072, Add this function for refersh InvariantDeviceProfile
     public void RenewInvariantDeviceProfile() {
         mInvariantDeviceProfile = new InvariantDeviceProfile(sContext);

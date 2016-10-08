@@ -54,6 +54,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -98,11 +99,15 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Advanceable;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -144,6 +149,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.android.launcher3.preview.RGKDragGridView;
+import com.android.launcher3.preview.RGKPreference;
+import com.android.launcher3.preview.RGKPreviewConfigure;
+import com.android.launcher3.preview.RGKPreviewItemInfo;
+import com.android.launcher3.preview.RGKWorkspacePreviewScrollLayout;
 /**
  * Default launcher application.
  */
@@ -233,9 +243,8 @@ public class Launcher extends Activity
     /**
      * The different states that Launcher can be in.
      */
-    enum State {
-        NONE, WORKSPACE, APPS, APPS_SPRING_LOADED, WIDGETS, WIDGETS_SPRING_LOADED
-    }
+    enum State { NONE, WORKSPACE, APPS, APPS_SPRING_LOADED, WIDGETS, WIDGETS_SPRING_LOADED ,
+        WORKSPACE_PREVIEW }    // Add by yeyu for screen edit 20160910
 
     @Thunk
     State mState = State.WORKSPACE;
@@ -1288,6 +1297,11 @@ public class Launcher extends Activity
         if (mWorkspace.getCustomContentCallbacks() != null) {
             mWorkspace.getCustomContentCallbacks().onHide();
         }
+        // Add by yeyu for screen edit 20160910 start
+        if (isWorkspacePreviewMode() && RGKPreviewConfigure.isMove) {
+            mWorkspacePreview.cancelDrag();
+        }
+        // Add by yeyu for screen edit 20160910 end
 
         if (mLauncherCallbacks != null) {
             mLauncherCallbacks.onPause();
@@ -1599,6 +1613,7 @@ public class Launcher extends Activity
             mHotseat.setOnLongClickListener(this);
         }
 
+        mWorkspacePreview = (RGKWorkspacePreviewScrollLayout) findViewById(R.id.wrokspce_preview);// Add by yeyu for screen edit 20160910
         mOverviewPanel = (ViewGroup) findViewById(R.id.overview_panel);
         mWidgetsButton = findViewById(R.id.widget_button);
         mWidgetsButton.setOnClickListener(new OnClickListener() {
@@ -1869,7 +1884,8 @@ public class Launcher extends Activity
                 // Reset AllApps to its initial state only if we are not in the middle of
                 // processing a multi-step drop
                 if (mAppsView != null && mWidgetsView != null &&
-                        mPendingAddInfo.container == ItemInfo.NO_ID) {
+                        mPendingAddInfo.container == ItemInfo.NO_ID
+                        && !isPreviewStates()) {
                     showWorkspace(false);
                 }
             } else if (Intent.ACTION_USER_PRESENT.equals(action)) {
@@ -2163,6 +2179,12 @@ public class Launcher extends Activity
 
             closeFolder();
             exitSpringLoadedDragMode();
+
+            // Add by yeyu for screen edit 20160910 start
+            if (isWorkspacePreviewMode()) {
+                dismissPreview();
+            }
+            // Add by yeyu for screen edit 20160910 end
 
             // If we are already on home, then just animate back to the workspace,
             // otherwise, just wait until onResume to set the state back to Workspace
@@ -2773,6 +2795,10 @@ public class Launcher extends Activity
             showWorkspace(true);
         } else if (isWidgetsViewVisible()) {
             showOverviewMode(true);
+            // Add by yeyu for screen edit 20160910 start
+        } else if (isWorkspacePreviewMode()) {
+            dismissPreview();
+            // Add by yeyu for screen edit 20160910 end
         } else if (mWorkspace.isInOverviewMode()) {
             showWorkspace(true);
         } else if (mWorkspace.getOpenFolder() != null) {
@@ -5506,6 +5532,635 @@ public class Launcher extends Activity
         }
         return false;
     }
+	    // Add by yeyu for screen edit 20160910 start
+    public boolean isPreviewStates() {
+        return mState == State.WORKSPACE_PREVIEW;
+    }
+
+    private ArrayList<RGKDragGridView> mListDragGridView = new ArrayList<RGKDragGridView>();
+    private RGKDragGridView mDragGridView = null;
+    private RGKWorkspacePreviewScrollLayout mWorkspacePreview = null;
+    private List<RGKPreviewItemInfo> listData = null;
+    private LinearLayout.LayoutParams param;
+    private LinearLayout mLinearLayout;
+    private static float bitmapWidth = 0;
+    private static float bitmapHeight = 0;
+    private static int MAX_SCREEN_COUNT = RGKWorkspacePreviewScrollLayout.MAX_SCROLLLAYOUT_COUNT
+            * RGKPreviewConfigure.WORKSPACE_PREVIEW_PAGE_SIZE;
+
+    public void showPreviews() {
+        if (mState != State.WORKSPACE)
+            return;
+        if (mListDragGridView == null || mListDragGridView.size() <= 0) {
+            mState = State.WORKSPACE_PREVIEW;
+            initPreviewBitmap(0, mWorkspace.getChildCount());
+            initPreviewUi();
+            initPreviewData();
+            hideWorkspaceSearchAndHotseat();
+            updateSearchBarVisibility(false);
+            mWorkspacePreview.setVisibility(View.VISIBLE);
+            Animation animation = AnimationUtils.loadAnimation(
+                    getApplicationContext(), R.anim.rgk_panel_enter);
+            mWorkspacePreview.setAnimation(animation);
+        }
+    }
+
+    private void initPreviewBitmap(int start, int end) {
+        final Resources resources = getResources();
+
+        //hideHotseat(false);
+        mWorkspace.setVisibility(View.GONE);
+
+
+        float max = RGKPreviewConfigure.WORKSPACE_PREVIEW_COLUMNS;
+
+        final Rect r = new Rect();
+        try {
+            resources.getDrawable(R.drawable.rgk_thumbnail_bg).getPadding(r);
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+        }
+
+
+
+        // Add @{
+        DeviceProfile prof =mDeviceProfile;
+        bitmapWidth = prof.previewWidth;
+        bitmapHeight = prof.previewHeight;
+        float scaleW = prof.previewScale;
+        float scaleH = prof.previewScale;
+        // }@
+
+        if (listData == null) {
+            listData = new ArrayList<RGKPreviewItemInfo>(end - start);
+        }
+        ArrayList<CellLayout> cellLayouts = mWorkspace
+                .getWorkspaceAndHotseatCellLayouts();
+
+        ShortcutAndWidgetContainer container = null;
+        for (int i = start; i < end; i++) {
+            container = cellLayouts.get(i).getShortcutsAndWidgets();
+            int count = container.getChildCount();
+
+            final Bitmap bitmap = Bitmap.createBitmap((int) bitmapWidth,
+                    (int) bitmapHeight, Bitmap.Config.ARGB_8888);
+            final Canvas canvas = new Canvas(bitmap);
+            canvas.scale(scaleW, scaleH);
+            canvas.translate(0, 0);
+            container.dispatchDraw(canvas);
+
+            RGKPreviewItemInfo tempRGKPreviewItemInfo = new RGKPreviewItemInfo();
+            tempRGKPreviewItemInfo
+                    .setCurrentPage(mWorkspace.getCurrentPage() == i);
+            tempRGKPreviewItemInfo.setHomePage(mWorkspace.getDefaultScreen() == i);
+            tempRGKPreviewItemInfo.setEmptyPage(count == 0);
+            tempRGKPreviewItemInfo.setIndex(i);
+            tempRGKPreviewItemInfo.setImage(bitmap);
+
+            listData.add(tempRGKPreviewItemInfo);
+        }
+        showNewScreenAddButton(false);
+    }
+
+    public void showNewScreenAddButton(boolean isUpdate) {
+        RGKPreviewItemInfo tempRGKPreviewItemInfo = new RGKPreviewItemInfo();
+
+        tempRGKPreviewItemInfo.setCurrentPage(false);
+        tempRGKPreviewItemInfo.setHomePage(false);
+        tempRGKPreviewItemInfo.setEmptyPage(false);
+        tempRGKPreviewItemInfo.setIndex(listData.size());
+        tempRGKPreviewItemInfo
+                .setImage(creatNewScreenBitmapForResources(R.drawable.rgk_thumbnail_new_screen_n));
+
+        listData.add(tempRGKPreviewItemInfo);
+
+        if (isUpdate) {
+            updateListDragGridView(false, false);
+        }
+    }
+
+    private Bitmap creatNewScreenBitmapForResources(int resId) {
+        final Resources resources = getResources();
+
+        Bitmap bitmap = Bitmap.createBitmap((int) bitmapWidth,
+                (int) bitmapHeight, Bitmap.Config.ARGB_8888);
+        Drawable drawable = resources.getDrawable(resId);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, (int) bitmapWidth, (int) bitmapHeight);
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
+    public void hideNewScreenAddButton() {
+        listData.remove(listData.size() - 1);
+        updateListDragGridView(true, false);
+    }
+
+    public void updateListDragGridView(boolean isDelete,
+                                       boolean isSnapToCureentScreen) {
+        int countPage = (int) Math.ceil(listData.size()
+                / (float) RGKPreviewConfigure.WORKSPACE_PREVIEW_PAGE_SIZE);
+
+        if (isDelete) {
+            if (countPage < RGKPreviewConfigure.countPages) {
+                mWorkspacePreview
+                        .removeViewAt(RGKPreviewConfigure.countPages - 1);
+                mListDragGridView.remove(RGKPreviewConfigure.countPages - 1);
+                RGKPreviewConfigure.countPages = countPage;
+
+                if (RGKPreviewConfigure.curentPage > RGKPreviewConfigure.countPages - 1
+                        && isSnapToCureentScreen) {
+                    RGKPreviewConfigure.curentPage = RGKPreviewConfigure.countPages - 1;
+                    mWorkspacePreview
+                            .snapToScreen(RGKPreviewConfigure.curentPage);
+                }
+                ((RGKPreviewAdapter) mListDragGridView.get(
+                        RGKPreviewConfigure.curentPage).getAdapter())
+                        .notifyDataSetChanged();
+            }
+        } else {
+            if (countPage > RGKPreviewConfigure.countPages) {
+                mWorkspacePreview
+                        .addView(addDragGridView(RGKPreviewConfigure.countPages));
+                RGKPreviewConfigure.countPages = countPage;
+                ((RGKPreviewAdapter) mListDragGridView.get(
+                        RGKPreviewConfigure.curentPage).getAdapter())
+                        .notifyDataSetChanged();
+
+                if (isSnapToCureentScreen) {
+                    RGKPreviewConfigure.curentPage = RGKPreviewConfigure.countPages - 1;
+                    mWorkspacePreview
+                            .snapToScreen(RGKPreviewConfigure.curentPage);
+                }
+            }
+        }
+        updateAllChildGridView();
+    }
+
+    public void updateAllChildGridView() {
+        for (int i = 0; i < RGKPreviewConfigure.countPages; i++) {
+            ((RGKPreviewAdapter) ((mListDragGridView.get(i)).getAdapter()))
+                    .showDropItem(true);
+            ((RGKPreviewAdapter) mListDragGridView.get(i).getAdapter())
+                    .notifyDataSetChanged();
+        }
+    }
+
+    private void initPreviewUi() {
+        RGKPreviewConfigure.init(this);
+        param = new LinearLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT);
+    }
+
+    private void initPreviewData() {
+        RGKPreviewConfigure.countPages = (int) Math.ceil(listData.size()
+                / (float) RGKPreviewConfigure.WORKSPACE_PREVIEW_PAGE_SIZE);
+
+        for (int i = 0; i < RGKPreviewConfigure.countPages; i++) {
+            mWorkspacePreview.addView(addDragGridView(i));
+        }
+
+        mWorkspacePreview
+                .setPageListener(new RGKWorkspacePreviewScrollLayout.PageListener() {
+                    @Override
+                    public void page(int page) {
+                    }
+                });
+    }
+
+    private LinearLayout addDragGridView(int index) {
+        mLinearLayout = new LinearLayout(this);
+        mLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        mDragGridView = new RGKDragGridView(this);
+        mDragGridView
+                .setNumColumns(RGKPreviewConfigure.WORKSPACE_PREVIEW_COLUMNS);
+        mDragGridView.setGravity(Gravity.CENTER);
+        mDragGridView.setAdapter(new RGKPreviewAdapter(this, mWorkspace, index,
+                RGKPreviewConfigure.countPages));
+        mDragGridView.setVisibility(View.VISIBLE);
+        mDragGridView.setHorizontalSpacing(mDeviceProfile.previewHSpace);
+        mDragGridView.setVerticalSpacing(mDeviceProfile.previewVSpace);
+
+        mDragGridView
+                .setGridPageListener(new RGKDragGridView.GridPageListener() {
+                    @Override
+                    public void page(int page) {
+                        mWorkspacePreview.snapToScreen(page);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                RGKPreviewConfigure.isChangingPage = false;
+                                if (RGKPreviewConfigure.isMove) {
+                                    mWorkspacePreview.resetMoveParameter();
+                                }
+                            }
+                        }, 300);
+                    }
+                });
+
+        mDragGridView
+                .setOnGridItemChangeListener(new RGKDragGridView.GridItemChangeListener() {
+                    @Override
+                    public void change(int from, int to, int count) {
+                        ((RGKPreviewAdapter) mListDragGridView.get(
+                                RGKPreviewConfigure.curentPage).getAdapter())
+                                .exchange(from, to);
+                        updateAllChildGridView();
+                    }
+                });
+
+        mListDragGridView.add(mDragGridView);
+        mLinearLayout.addView(mListDragGridView.get(index), param);
+        return mLinearLayout;
+    }
+
+    public void swapListData(int startPosition, int endPosition) {
+        if (endPosition > listData.size() - 1) {
+            endPosition = listData.size() - 1;
+        }
+
+        if (startPosition > listData.size() - 1) {
+            startPosition = listData.size() - 1;
+        }
+
+        listData.get(startPosition).setIndex(endPosition);
+        Object startObject = listData.get(startPosition);
+
+        if (startPosition > endPosition) {
+            for (int i = startPosition - 1; i >= endPosition; i--) {
+                listData.get(i).setIndex(i + 1);
+            }
+            listData.add(endPosition, (RGKPreviewItemInfo) startObject);
+            listData.remove(startPosition + 1);
+        } else {
+            for (int i = startPosition + 1; i <= endPosition; i++) {
+                listData.get(i).setIndex(i - 1);
+            }
+            listData.add(endPosition + 1, (RGKPreviewItemInfo) startObject);
+            listData.remove(startPosition);
+        }
+    }
+
+    public void addNewPreviewScreen() {
+        if (mWorkspace.addExtraEmptyScreen()) {
+            mWorkspace.commitExtraEmptyScreen();
+        }
+
+        RGKPreviewItemInfo tempRGKPreviewItemInfo = new RGKPreviewItemInfo();
+        tempRGKPreviewItemInfo.setCurrentPage(false);
+        tempRGKPreviewItemInfo.setHomePage(false);
+        tempRGKPreviewItemInfo.setEmptyPage(true);
+        tempRGKPreviewItemInfo.setIndex(listData.size() - 1);
+        tempRGKPreviewItemInfo.setImage(Bitmap.createBitmap((int) bitmapWidth,
+                (int) bitmapHeight, Bitmap.Config.ARGB_8888));
+
+        listData.add(listData.size() - 1, tempRGKPreviewItemInfo);
+
+        listData.get(listData.size() - 1).setIndex(listData.size() - 1);
+
+        if (mWorkspace.getChildCount() == MAX_SCREEN_COUNT) {
+            updateListDragGridView(false, false);
+        } else {
+            updateListDragGridView(false, true);
+        }
+    }
+
+    public void dismissPreview() {
+        Animation animation = AnimationUtils.loadAnimation(
+                getApplicationContext(), R.anim.rgk_panel_exit);
+        mWorkspacePreview.setAnimation(animation);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation arg0) {
+
+                for (int i = 0; i < listData.size(); i++) {
+                    if (listData.get(i).isCurrentPage()) {
+                        if (listData.get(i).getIndex() > mWorkspace.getPageCount() - 1) {
+                            mWorkspace.setCurrentPage(0);
+                        } else {
+                            mWorkspace.setCurrentPage(listData.get(i).getIndex());
+                        }
+                        break;
+                    }
+                }
+                mWorkspace.snapToPage(mWorkspace.getCurrentPage(), 0);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                mWorkspacePreview.setVisibility(View.GONE);
+                recycleBitmap();
+                mWorkspacePreview.removeAllViews();
+                mListDragGridView.removeAll(mListDragGridView);
+            }
+        });
+
+        mWorkspace.setVisibility(View.VISIBLE);
+        updateSearchBarVisibility(true);
+        showWorkspaceSearchAndHotseat();
+        Animation animation1 = AnimationUtils.loadAnimation(
+                getApplicationContext(), R.anim.rgk_workspace_enter);
+        mWorkspace.setAnimation(animation1);
+        mState = State.WORKSPACE;
+    }
+
+    private void recycleBitmap() {
+        if (listData != null) {
+            for (int i = 0; i < listData.size(); i++) {
+                listData.get(i).getImage().recycle();
+            }
+            listData.removeAll(listData);
+            listData = null;
+        }
+    }
+
+    public RGKDragGridView getCurentDragPageView() {
+        if (mListDragGridView.size() == 0)
+            return null;
+        return mListDragGridView.get(RGKPreviewConfigure.curentPage);
+    }
+
+    public RGKDragGridView getDragPageView(int index) {
+        return mListDragGridView.get(index);
+    }
+
+    public boolean isWorkspacePreviewMode() {
+        return mState == State.WORKSPACE_PREVIEW;
+    }
+
+    public void deletePreviewScreen(int deleteIndex) {
+        if (listData == null || deleteIndex < 0 || deleteIndex >= listData.size()) {
+            return;
+        }
+        int index = 0;
+        for (int i = deleteIndex + 1; i < listData.size(); i++) {
+            index = listData.get(i).getIndex() - 1;
+            listData.get(i).setIndex(index);
+        }
+
+        listData.get(deleteIndex).getImage().recycle();
+        listData.remove(deleteIndex);
+
+        updateListDragGridView(true, true);
+        mWorkspace.deleteWorkspaceScreen(deleteIndex);
+    }
+
+    private void updateSearchBarVisibility(boolean visible) {
+
+    }
+
+    public class RGKPreviewAdapter extends BaseAdapter {
+        private static final String TAG = "RGKPreviewAdapter";
+        private Context mContext = null;
+        private int holdPosition;
+        private boolean isChanged = false;
+        private boolean ShowItem = true;
+        private int mCurrentPage = 0;
+        private Workspace mWorkspace;
+        private LayoutInflater mInflater;
+        private int startIndex = 0;
+
+        public RGKPreviewAdapter(Context mContext, Workspace mWorkspace,
+                                 int mCurrentPage, int mTotalPage) {
+            this.mContext = mContext;
+            this.mWorkspace = mWorkspace;
+            mInflater = LayoutInflater.from(this.mContext);
+            this.mCurrentPage = mCurrentPage;
+            startIndex = this.mCurrentPage * RGKPreviewConfigure.WORKSPACE_PREVIEW_PAGE_SIZE;
+        }
+
+        @Override
+        public int getCount() {
+            if (mCurrentPage < (RGKPreviewConfigure.countPages - 1)) {
+                return RGKPreviewConfigure.WORKSPACE_PREVIEW_PAGE_SIZE;
+            } else {
+                if (listData.size() % RGKPreviewConfigure.WORKSPACE_PREVIEW_PAGE_SIZE == 0) {
+                    return RGKPreviewConfigure.WORKSPACE_PREVIEW_PAGE_SIZE;
+                }
+                return (listData.size() % RGKPreviewConfigure.WORKSPACE_PREVIEW_PAGE_SIZE);
+            }
+        }
+
+        @Override
+        public Object getItem(int arg0) {
+            return listData.get(arg0);
+        }
+
+        @Override
+        public long getItemId(int arg0) {
+            return arg0;
+        }
+
+        public void showDropItem(boolean showItem) {
+            this.ShowItem = showItem;
+        }
+
+        public void resetParameter() {
+            holdPosition = 0;
+            isChanged = false;
+            ShowItem = true;
+        }
+
+        public void setChange(boolean isChanged) {
+            this.isChanged = isChanged;
+        }
+
+        public void setHoldPosition(int holdPosition) {
+            this.holdPosition = holdPosition;
+        }
+
+        public void exchange(int startPosition, int endPosition) {
+            startPosition = startPosition + startIndex;
+            endPosition = endPosition + startIndex;
+
+            if (endPosition > listData.size() - 1) {
+                endPosition = listData.size() - 1;
+            }
+
+            if (startPosition > listData.size() - 1) {
+                startPosition = listData.size() - 1;
+            }
+
+            listData.get(startPosition).setIndex(endPosition);
+            holdPosition = endPosition;
+            Object startObject = getItem(startPosition);
+
+            if (startPosition > endPosition) {
+                for (int i = startPosition - 1; i >= endPosition; i--) {
+                    listData.get(i).setIndex(i + 1);
+                }
+                listData.add(endPosition, (RGKPreviewItemInfo) startObject);
+                listData.remove(startPosition + 1);
+            } else {
+                for (int i = startPosition + 1; i <= endPosition; i++) {
+                    listData.get(i).setIndex(i - 1);
+                }
+                listData.add(endPosition + 1, (RGKPreviewItemInfo) startObject);
+                listData.remove(startPosition);
+            }
+
+            SharedPreferences.Editor editor = getSharedPrefs().edit();
+            editor.putInt(RGKPreference.KEY_DEFAULT_SCREEN, getHomeIndex());
+            editor.commit();
+            isChanged = true;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            int index = position + startIndex;
+            convertView = mInflater.inflate(
+                    R.layout.rgk_workspace_preview_item, parent, false);
+
+            ImageView thumbnail = (ImageView) convertView
+                    .findViewById(R.id.thumbnail);
+            ImageView home_mark = (ImageView) convertView
+                    .findViewById(R.id.home_mark);
+            ImageView delete = (ImageView) convertView
+                    .findViewById(R.id.delete);
+
+            if (isChanged) {
+                if (index == holdPosition) {
+                    if (!ShowItem) {
+                        convertView.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+
+            if ((mCurrentPage + 1) == RGKPreviewConfigure.countPages
+                    && index == (listData.size() - 1)) {
+                if (!RGKPreviewConfigure.isHideButton) {
+                    if (mWorkspace.getChildCount() < MAX_SCREEN_COUNT) {
+                        thumbnail.setBackgroundResource(R.drawable.rgk_thumbnail_new_screen);
+                    }
+                    thumbnail.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mContext instanceof Launcher) {
+                                addNewPreviewScreen();
+                            }
+                        }
+                    });
+
+                    return convertView;
+                }
+            }
+
+            if (listData.get(index).isHomePage()) {
+                home_mark.setImageResource(R.drawable.rgk_home_button_sethome_on);
+            } else {
+                home_mark.setImageResource(R.drawable.rgk_home_button_sethome_off);
+            }
+
+            thumbnail.setImageBitmap(listData.get(index).getImage());
+            thumbnail.setBackgroundResource(R.drawable.rgk_thumbnail_bg);
+
+            delete.setTag(listData.get(index).getIndex());
+            delete.setImageResource(R.drawable.rgk_delete_screen_btn);
+            if (listData.get(index).isEmptyPage()) {
+                delete.setVisibility(View.VISIBLE);
+            } else {
+                delete.setVisibility(View.GONE);
+            }
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mContext instanceof Launcher) {
+                        final int idx = (Integer) v.getTag();
+
+                        if (listData.get(idx).isCurrentPage()) {
+                            if (idx == 0) {
+                                listData.get(idx + 1).setCurrentPage(true);
+                                mWorkspace.setCurrentPage(listData.get(idx + 1).getIndex());
+                            } else {
+                                listData.get(idx - 1).setCurrentPage(true);
+                                mWorkspace.setCurrentPage(listData.get(idx - 1).getIndex());
+                            }
+                        }
+Log.i("zhaoedit","idx:"+idx);
+                        deletePreviewScreen(idx);
+                    }
+                }
+            });
+
+            home_mark.setTag(index);
+            home_mark.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    int index = (Integer) v.getTag();
+                    exchangeHomeIndex(listData.get(index).getIndex());
+                    SharedPreferences.Editor editor = getSharedPrefs().edit();
+                    editor.putInt(RGKPreference.KEY_DEFAULT_SCREEN, listData.get(index).getIndex());
+                    editor.commit();
+                    mWorkspace.setDefaultScreen(listData.get(index).getIndex());
+                    updateAllChildGridView();
+                }
+            });
+
+            thumbnail.setTag(index);
+            thumbnail.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    int index = (Integer) v.getTag();
+                    v.setFocusableInTouchMode(true);
+
+                    exchangeCurrentIndex(listData.get(index).getIndex());
+                    dismissPreview();
+                }
+            });
+
+            thumbnail.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View arg0) {
+                    return false;
+                }
+            });
+
+            return convertView;
+        }
+
+        public int getHomeIndex() {
+            for (int i = 0; i < listData.size(); i++) {
+                if (listData.get(i).isHomePage()) {
+                    return i;
+                }
+            }
+            return 0;
+        }
+
+        public void exchangeHomeIndex(int homeIndex) {
+            listData.get(getHomeIndex()).setHomePage(false);
+            listData.get(homeIndex).setHomePage(true);
+            SharedPreferences.Editor editor = getSharedPrefs().edit();
+            editor.putInt(RGKPreference.KEY_DEFAULT_SCREEN, homeIndex);
+            editor.commit();
+        }
+
+        public int getCurrentIndex() {
+            for (int i = 0; i < listData.size(); i++) {
+                if (listData.get(i).isCurrentPage()) {
+                    return i;
+                }
+            }
+            return 0;
+        }
+
+        public void exchangeCurrentIndex(int currentIndex) {
+            listData.get(getCurrentIndex()).setCurrentPage(false);
+            listData.get(currentIndex).setCurrentPage(true);
+        }
+    }
+    // Add by yeyu for screen edit 20160910 end
 }
 
 interface DebugIntents {

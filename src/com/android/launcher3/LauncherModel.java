@@ -1366,7 +1366,7 @@ public class LauncherModel extends BroadcastReceiver
         }
     }
 
-    void forceReload() {
+    public void forceReload() {//Modify by yeyu for screen edit 20160910
         resetLoadedState(true, true);
         if (DEBUG_LOADERS) {
             Log.d(TAG, "forceReload: mLoaderTask =" + mLoaderTask + ", mAllAppsLoaded = "
@@ -2495,21 +2495,24 @@ public class LauncherModel extends BroadcastReceiver
                             null, sWorker);
                 }
 
-                // Remove any empty screens
-                ArrayList<Long> unusedScreens = new ArrayList<Long>(sBgWorkspaceScreens);
-                for (ItemInfo item: sBgItemsIdMap) {
-                    long screenId = item.screenId;
-                    if (item.container == LauncherSettings.Favorites.CONTAINER_DESKTOP &&
-                            unusedScreens.contains(screenId)) {
-                        unusedScreens.remove(screenId);
-                    }
-                }
 
-                // If there are any empty screens remove them, and update.
-                if (unusedScreens.size() != 0) {
-                    sBgWorkspaceScreens.removeAll(unusedScreens);
-                    updateWorkspaceScreenOrder(context, sBgWorkspaceScreens);
-                }
+                if (!LauncherAppState.isSupportHomeScreenEdit()) {// Add by yeyu for screen edit 20160910
+                    // Remove any empty screens
+                    ArrayList<Long> unusedScreens = new ArrayList<Long>(sBgWorkspaceScreens);
+                    for (ItemInfo item: sBgItemsIdMap) {
+                        long screenId = item.screenId;
+                        if (item.container == LauncherSettings.Favorites.CONTAINER_DESKTOP &&
+                                unusedScreens.contains(screenId)) {
+                            unusedScreens.remove(screenId);
+                        }
+                    }
+
+                    // If there are any empty screens remove them, and update.
+                    if (unusedScreens.size() != 0) {
+                        sBgWorkspaceScreens.removeAll(unusedScreens);
+                        updateWorkspaceScreenOrder(context, sBgWorkspaceScreens);
+                    }
+                }// Add by yeyu for screen edit 20160910
 
                 if (DEBUG_LOADERS) {
                     Log.d(TAG, "loaded workspace in " + (SystemClock.uptimeMillis()-t) + "ms");

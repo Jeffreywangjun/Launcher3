@@ -240,4 +240,5 @@
     <dimen name="app_icon_wh">48dp</dimen>
     <dimen name="toast_text_size">20sp</dimen>
     <!--t9 end-->
+    <dimen name="preview_h_space">4dp</dimen><!--Add by yeyu for screen edit 20160910 -->
 </resources>

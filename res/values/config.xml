@@ -103,4 +103,5 @@
     
     <!-- Unread support -->
     <bool name="config_unreadSupport">true</bool>
+	    <bool name="has_screenEffect">true</bool><!--Add by yeyu for screen edit 20160910-->
 </resources>

@@ -33,6 +33,8 @@ import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.android.launcher3.preview.RGKPreviewConfigure;
+
 public class DeviceProfile {
 
     public final InvariantDeviceProfile inv;
@@ -97,6 +99,17 @@ public class DeviceProfile {
     private int searchBarSpaceWidthPx;
     private int searchBarSpaceHeightPx;
 
+    //screen edit
+    // Add by yeyu for screen edit 20160910 start
+    int previewHSpace = 0;
+    int previewVSpace = 0;
+    int previewWidth = 0;
+    int previewHeight = 0;
+    float previewScale = 0.0f;
+    Resources res;
+    // Add by yeyu for screen edit 20160910 end
+
+
     public DeviceProfile(Context context, InvariantDeviceProfile inv,
             Point minSize, Point maxSize,
             int width, int height, boolean isLandscape) {
@@ -104,7 +117,7 @@ public class DeviceProfile {
         this.inv = inv;
         this.isLandscape = isLandscape;
 
-        Resources res = context.getResources();
+        res = context.getResources();//Modify by yeyu for screen edit 20160910
         DisplayMetrics dm = res.getDisplayMetrics();
 
         // Constants from resources
@@ -415,6 +428,10 @@ public class DeviceProfile {
         Rect padding = getWorkspacePadding(isLayoutRtl);
         workspace.setLayoutParams(lp);
         workspace.setPadding(padding.left, padding.top, padding.right, padding.bottom);
+        // Add by yeyu for screen edit 20160910 start
+        int width = availableWidthPx - padding.left - padding.right;
+        int height = availableHeightPx - padding.top - padding.bottom;
+        // Add by yeyu for screen edit 20160910 end
         workspace.setPageSpacing(getWorkspacePageSpacing(isLayoutRtl));
 
         // Layout the hotseat
@@ -502,6 +519,21 @@ public class DeviceProfile {
                 }
             }
         }
+        // Add by yeyu for screen edit 20160910 start
+        final Rect r = new Rect();
+        try {
+            res.getDrawable(R.drawable.rgk_thumbnail_bg).getPadding(r);
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+        }
+
+        CellLayout cell = ((CellLayout) workspace.getChildAt(0));
+        previewHSpace = res.getDimensionPixelSize(R.dimen.preview_h_space);
+        previewWidth = (availableWidthPx - 2 * previewHSpace) / RGKPreviewConfigure.WORKSPACE_PREVIEW_COLUMNS - r.left - r.right;
+        previewScale = ((float)previewWidth) / width;
+        previewHeight = (int)(previewScale * height);
+        previewVSpace = availableHeightPx / RGKPreviewConfigure.WORKSPACE_PREVIEW_COLUMNS - previewHeight - r.top - r.bottom;
+        // Add by yeyu for screen edit 20160910 end
     }
 
     private int getCurrentWidth() {

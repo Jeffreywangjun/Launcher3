@@ -86,4 +86,12 @@
         android:layout_height="match_parent"
         android:inflatedId="@+id/launcher_overlay"
         android:layout="@layout/launcher_overlay" />
+    <!--// Add by yeyu for screen edit 20160910 start-->
+    <com.android.launcher3.preview.RGKWorkspacePreviewScrollLayout
+        android:id="@+id/wrokspce_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+    </com.android.launcher3.preview.RGKWorkspacePreviewScrollLayout>
+    <!--// Add by yeyu for screen edit 20160910 end-->
 </com.android.launcher3.LauncherRootView>
