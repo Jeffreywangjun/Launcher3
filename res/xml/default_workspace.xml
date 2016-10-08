@@ -56,18 +56,18 @@
         wellswipe:satelite_item_index="8"
         wellswipe:satelite_packageName="com.android.browser" />
 
-    <quicksswitch
+    <!--<quicksswitch
         wellswipe:satelite_item_action="@string/rgk_flash"
         wellswipe:satelite_item_index="0"
-        wellswipe:satelite_item_title="@string/rgk_flash_title" />
+        wellswipe:satelite_item_title="@string/rgk_flash_title" />-->
     <quicksswitch
         wellswipe:satelite_item_action="@string/rgk_wifi"
         wellswipe:satelite_item_index="1"
         wellswipe:satelite_item_title="@string/rgk_wifi_title" />
-    <quicksswitch
+   <!-- <quicksswitch
         wellswipe:satelite_item_action="@string/rgk_screenbrightness"
         wellswipe:satelite_item_index="2"
-        wellswipe:satelite_item_title="@string/rgk_screenbrightness_title" />
+        wellswipe:satelite_item_title="@string/rgk_screenbrightness_title" />-->
     <quicksswitch
         wellswipe:satelite_item_action="@string/rgk_mute"
         wellswipe:satelite_item_index="3"
@@ -76,10 +76,10 @@
         wellswipe:satelite_item_action="@string/rgk_bluetooth"
         wellswipe:satelite_item_index="4"
         wellswipe:satelite_item_title="@string/rgk_bluetooth_title" />
-    <quicksswitch
+    <!--<quicksswitch
         wellswipe:satelite_item_action="@string/rgk_autorotation"
         wellswipe:satelite_item_index="5"
-        wellswipe:satelite_item_title="@string/rgk_autorotation_title" />
+        wellswipe:satelite_item_title="@string/rgk_autorotation_title" />-->
     <quicksswitch
         wellswipe:satelite_item_action="@string/rgk_setting"
         wellswipe:satelite_item_index="6"

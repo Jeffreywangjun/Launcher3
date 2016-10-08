@@ -29,7 +29,7 @@ public class RgkSateLiteToolsDialog extends RgkSateLiteDialog implements
 	private ArrayList<RgkItemToolsInfo> mFixedList;
 
 	private ArrayList<RgkItemToolsInfo> mSelectedList;
-	private static final int rgkToolsCount = 9;
+	private static final int rgkToolsCount = 6;
 
 	public RgkSateLiteToolsDialog(Context context) {
 		this(context, null);
@@ -168,6 +168,7 @@ public class RgkSateLiteToolsDialog extends RgkSateLiteDialog implements
 					.from(getContext()).inflate(R.layout.rgk_grid_item_layout,
 							null);
 			itemview.setTag(i);
+			//加载快捷方式的icon
 			RgkToolsBean.getInstance().initView(getContext(), itemview,
 					mFixedList.get(i));
 			itemview.setTitle(mFixedList.get(i).mTitle.toString());
