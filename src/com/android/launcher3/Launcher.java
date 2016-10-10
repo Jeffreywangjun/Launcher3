@@ -764,7 +764,7 @@ RelativeLayout mCustomView;//lihuachun
      * To be overridden by subclasses to hint to Launcher that we have custom content
      */
     protected boolean hasCustomContentToLeft() {
-      return true;
+      return false;
     }
 
     /**
