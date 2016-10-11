@@ -3289,7 +3289,9 @@ public class LauncherModel extends BroadcastReceiver
 
             if (added != null) {
                 addAppsToAllApps(context, added);
-                addAndBindAddedWorkspaceItems(context, added);
+                if (LauncherAppState.isDisableAllApps()){
+                    addAndBindAddedWorkspaceItems(context, added);
+                }
                 for (AppInfo ai : added) {
                     addedOrUpdatedApps.put(ai.componentName, ai);
                 }

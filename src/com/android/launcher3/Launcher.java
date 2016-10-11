@@ -21,7 +21,7 @@
  */
 
 package com.android.launcher3;
-import android.widget.RelativeLayout;//lihuachun
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
@@ -517,7 +517,6 @@ public class Launcher extends Activity
     ///M.
 
     private String mCurrentQsbPkgName;
-RelativeLayout mCustomView;//lihuachun
     RgkApplication mSwipeApplication;
 
     @Override
@@ -764,7 +763,10 @@ RelativeLayout mCustomView;//lihuachun
      * To be overridden by subclasses to hint to Launcher that we have custom content
      */
     protected boolean hasCustomContentToLeft() {
-      return false;
+        if (mLauncherCallbacks != null) {
+            return mLauncherCallbacks.hasCustomContentToLeft();
+        }
+        return false;
     }
 
     /**
@@ -772,51 +774,12 @@ RelativeLayout mCustomView;//lihuachun
      * {@link #addToCustomContentPage}. This will only be invoked if
      * {@link #hasCustomContentToLeft()} is {@code true}.
      */
-    protected void populateCustomContentContainer() {//lihuachun
-
-
-        try {
-        	
-
-       // mCustomView = (RelativeLayout) getLayoutInflater().inflate(R.layout.activity_splash, null);
-        	 mCustomView = (RelativeLayout) getLayoutInflater().inflate(R.layout.lefty_main_containers, null);
-		
-	
-		
-        	
-        	
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+    protected void populateCustomContentContainer() {
+        if (mLauncherCallbacks != null) {
+            mLauncherCallbacks.populateCustomContentContainer();
         }
-
-        addCustomContentToLeft(mCustomView);
     }
-public void addCustomContentToLeft(final View customView) {
 
-
-        CustomContentCallbacks callbacks = new CustomContentCallbacks() {
-
-            @Override
-            public void onScrollProgressChanged(float progress) {
-               // CommonsUtils.hideKeyboard(LeftyActivity.this);
-            }
-
-            @Override
-            public boolean isScrollingAllowed() {
-                return true;
-            }
-
-            @Override
-            public void onShow(boolean fromResume) {
-            }
-
-            @Override
-            public void onHide() {}
-        };
-
-
-        addToCustomContentPage(customView, callbacks, "custom view");
-    }
     /**
      * Invoked by subclasses to signal a change to the {@link #addCustomContentToLeft} value to
      * ensure the custom content page is added or removed if necessary.
@@ -827,8 +790,7 @@ public void addCustomContentToLeft(final View customView) {
             return;
         }
 
-        //if (!mWorkspace.hasCustomContent() && hasCustomContentToLeft()) {
-        if (mWorkspace.hasCustomContent() && hasCustomContentToLeft()) {//lihuachun
+        if (!mWorkspace.hasCustomContent() && hasCustomContentToLeft()) {
             // Create the custom content page and call the subclass to populate it.
             mWorkspace.createCustomContentContainer();
             populateCustomContentContainer();
@@ -1697,6 +1659,17 @@ public void addCustomContentToLeft(final View customView) {
         } else {
             settingsButton.setVisibility(View.GONE);
         }
+
+        View singlemodeButton = findViewById(R.id.singlemode_button);
+        singlemodeButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mWorkspace.isSwitchingState()) {
+                    onClickSinglemodeButton(v);
+                }
+            }
+        });
+
         mOverviewPanel.setAlpha(0f);
 
         // Setup the workspace
@@ -1742,6 +1715,10 @@ public void addCustomContentToLeft(final View customView) {
             boolean show = shouldShowWeightWatcher();
             mWeightWatcher.setVisibility(show ? View.VISIBLE : View.GONE);
         }
+    }
+
+    private void onClickSinglemodeButton(View v) {
+            startActivity(new Intent(this, SinglemodeActivity.class));
     }
 
     /**
