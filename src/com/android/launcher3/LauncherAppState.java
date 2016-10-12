@@ -206,7 +206,7 @@ public class LauncherAppState {
         return mPowerManager;
     }
 	public static boolean isDisableAllApps() {
-       return true;
+       return SinglemodeActivity.ALL_APP_SINGLEMODE;
    }
     // Add by yeyu for screen edit 20160910 start
     public static boolean isSupportHomeScreenEdit() {

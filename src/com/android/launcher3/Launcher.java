@@ -1659,6 +1659,17 @@ public class Launcher extends Activity
         } else {
             settingsButton.setVisibility(View.GONE);
         }
+
+        View singlemodeButton = findViewById(R.id.singlemode_button);
+        singlemodeButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mWorkspace.isSwitchingState()) {
+                    onClickSinglemodeButton(v);
+                }
+            }
+        });
+
         mOverviewPanel.setAlpha(0f);
 
         // Setup the workspace
@@ -1704,6 +1715,10 @@ public class Launcher extends Activity
             boolean show = shouldShowWeightWatcher();
             mWeightWatcher.setVisibility(show ? View.VISIBLE : View.GONE);
         }
+    }
+
+    private void onClickSinglemodeButton(View v) {
+            startActivity(new Intent(this, SinglemodeActivity.class));
     }
 
     /**

@@ -204,6 +204,7 @@
             android:autoRemoveFromRecents="true"
             android:label="@string/settings_button_text"
             android:process=":settings_process"></activity>
+        <activity android:name=".SinglemodeActivity"/>
 
         <!-- Debugging tools -->
         <!-- wangjun delete  - for running error on AS
@@ -274,5 +275,6 @@
                 <action android:name="com.rgk.sendMessage" />
             </intent-filter>
         </receiver>
+
     </application>
 </manifest>

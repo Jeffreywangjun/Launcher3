@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 主题图片 -->
+    <com.android.launcher3.lefty.SlideShowView
+        android:id="@+id/slideshowView"
+		android:layout_marginTop="90dp"
+        android:layout_width="fill_parent"
+        android:layout_height="180dp"
+        android:layout_centerHorizontal="true" />
+
+ <com.android.launcher3.lefty.SlideShowView
+        android:id="@+id/slideshowViewa"
+		android:layout_below="@id/slideshowView"
+        android:layout_width="fill_parent"
+        android:layout_height="180dp"
+       />
+<com.android.launcher3.lefty.SlideShowView
+        android:id="@+id/slideshowViewaa"
+		android:layout_below="@id/slideshowViewa"
+        android:layout_width="fill_parent"
+        android:layout_height="180dp"
+       />
+
+</RelativeLayout>

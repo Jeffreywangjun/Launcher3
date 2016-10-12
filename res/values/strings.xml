@@ -313,5 +313,6 @@
     <string name="the_app_has_been_launched">该应用已经打开</string>
     <string name="can_not_to_uninstall_yourself">无法卸载自己</string>
     <string name="long_click_start_voice">长按可语音搜索应用</string>
-<!--t9 end-->
+    <!--t9 end-->
+    <string name="SingleMode_button_text">SingleMode</string>
 </resources>
