@@ -302,7 +302,7 @@ public class Launcher extends Activity
     private View mAllAppsButton;
     private View mWidgetsButton;
     private View t9View; //Add by zhaopenglin for t9 20160920
-
+private View t9View_left; //Add by lihuachun for t9 20161021
     private SearchDropTargetBar mSearchDropTargetBar;
 
     // Main container view for the all apps screen.
@@ -763,10 +763,7 @@ public class Launcher extends Activity
      * To be overridden by subclasses to hint to Launcher that we have custom content
      */
     protected boolean hasCustomContentToLeft() {
-        if (mLauncherCallbacks != null) {
-            return mLauncherCallbacks.hasCustomContentToLeft();
-        }
-        return false;
+      return true;
     }
 
     /**
@@ -774,12 +771,51 @@ public class Launcher extends Activity
      * {@link #addToCustomContentPage}. This will only be invoked if
      * {@link #hasCustomContentToLeft()} is {@code true}.
      */
-    protected void populateCustomContentContainer() {
-        if (mLauncherCallbacks != null) {
-            mLauncherCallbacks.populateCustomContentContainer();
-        }
-    }
+    protected void populateCustomContentContainer() {//lihuachun
 
+
+        try {
+        	
+
+       // mCustomView = (RelativeLayout) getLayoutInflater().inflate(R.layout.activity_splash, null);
+        	 t9View_left =getLayoutInflater().inflate(R.layout.activity_main, null);
+		 AppInfoHelper.getInstance().setBaseAllAppInfos(LauncherModel.allAddAppItems);
+	
+		
+        	
+        	
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        addCustomContentToLeft(t9View_left);
+    }
+public void addCustomContentToLeft(final View customView) {
+
+
+        CustomContentCallbacks callbacks = new CustomContentCallbacks() {
+
+            @Override
+            public void onScrollProgressChanged(float progress) {
+               // CommonsUtils.hideKeyboard(LeftyActivity.this);
+            }
+
+            @Override
+            public boolean isScrollingAllowed() {
+                return true;
+            }
+
+            @Override
+            public void onShow(boolean fromResume) {
+            }
+
+            @Override
+            public void onHide() {}
+        };
+
+
+        addToCustomContentPage(customView, callbacks, "custom view");
+    }
     /**
      * Invoked by subclasses to signal a change to the {@link #addCustomContentToLeft} value to
      * ensure the custom content page is added or removed if necessary.
@@ -790,7 +826,8 @@ public class Launcher extends Activity
             return;
         }
 
-        if (!mWorkspace.hasCustomContent() && hasCustomContentToLeft()) {
+        //if (!mWorkspace.hasCustomContent() && hasCustomContentToLeft()) {
+        if (mWorkspace.hasCustomContent() && hasCustomContentToLeft()) {//lihuachun
             // Create the custom content page and call the subclass to populate it.
             mWorkspace.createCustomContentContainer();
             populateCustomContentContainer();
