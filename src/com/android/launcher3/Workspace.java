@@ -685,7 +685,7 @@ public class Workspace extends PagedView
         int spanY = customScreen.getCountY();
         CellLayout.LayoutParams lp = new CellLayout.LayoutParams(0, 0, spanX, spanY);
         lp.canReorder  = false;
-        lp.isFullscreen = true;
+        lp.isFullscreen = false;
         if (customContent instanceof Insettable) {
             ((Insettable)customContent).setInsets(mInsets);
         }
