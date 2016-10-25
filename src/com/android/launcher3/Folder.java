@@ -945,12 +945,12 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
 
     @Override
     public boolean supportsAppInfoDropTarget() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean supportsDeleteDropTarget() {
-        return false;
+        return !LauncherAppState.isDisableAllApps();
     }
 
     @Override
