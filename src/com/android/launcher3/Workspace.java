@@ -617,7 +617,15 @@ public class Workspace extends PagedView
         }
         return screenId;
     }
-
+    //add by lihuachun start
+    private int getNavigationBarHeight() {
+        Resources resources =mLauncher.getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height","dimen", "android");
+        int height = resources.getDimensionPixelSize(resourceId);
+        Log.v("dbw", "Navi height:" + height);
+        return height;
+    }
+    //add by lihuachun end
     public void createCustomContentContainer() {
         CellLayout customScreen = (CellLayout)
                 mLauncher.getLayoutInflater().inflate(R.layout.workspace_screen, this, false);
@@ -625,9 +633,10 @@ public class Workspace extends PagedView
 
         mWorkspaceScreens.put(CUSTOM_CONTENT_SCREEN_ID, customScreen);
         mScreenOrder.add(0, CUSTOM_CONTENT_SCREEN_ID);
-
-        // We want no padding on the custom content
-        customScreen.setPadding(0, 0, 0, 0);
+//getNavigationBarHeight()
+int NavigationBar_H= getNavigationBarHeight();//add by lihuachun
+// We want no padding on the custom content
+        customScreen.setPadding(0, 0, 0, NavigationBar_H);//modify by lihuachun
 
         addFullScreenPage(customScreen);
 
@@ -685,7 +694,7 @@ public class Workspace extends PagedView
         int spanY = customScreen.getCountY();
         CellLayout.LayoutParams lp = new CellLayout.LayoutParams(0, 0, spanX, spanY);
         lp.canReorder  = false;
-        lp.isFullscreen =false;
+        lp.isFullscreen =true;
         if (customContent instanceof Insettable) {
             ((Insettable)customContent).setInsets(mInsets);
         }

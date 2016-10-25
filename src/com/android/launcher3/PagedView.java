@@ -773,7 +773,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
 
     public void addFullScreenPage(View page) {
         LayoutParams lp = generateDefaultLayoutParams();
-        lp.isFullScreenPage = false;
+        lp.isFullScreenPage = true;
         super.addView(page, 0, lp);
     }
 
