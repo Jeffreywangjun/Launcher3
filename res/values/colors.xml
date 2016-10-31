@@ -58,6 +58,22 @@
     <color name="indicator_theme_purple">#673ab7</color>
     <color name="indicator_theme_purple_selector">#7e57c2</color>
     <color name="white">#ffffff</color>
+    <!--add by lihuachun start -->
+    <color name="lucensy">#00000001</color>
+    <color name="translucency">#e0000000</color>
+    <color name="orange">#ffa500</color>
+    <color name="blue">#836FFF</color>
+    <color name="light_orange">#fcb75c</color>
+    <color name="gray">#DBDBDB</color>
+    <color name="trans">#50000000</color>
+    <color name="red">#fe0202</color>
+    <color name="background">#e5e5e5</color>
+    <color name="transparent_background">#50000000</color>
+    <color name="text_gray1">#4F4F4F</color>
+    <color name="green">#00FF00</color>
+    <color name="grey21">#363636</color>
+    <color name="gold">#b89766</color>
+    <!--add by lihuachun end -->
     <color name="swipe_header_title_color">#383838</color>
     <color name="swipe_bottom_gray">#cccccc</color>
     <color name="anglelayout_background">#99202020</color>

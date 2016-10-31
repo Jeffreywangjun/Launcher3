@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<layoutAnimation xmlns:android="http://schemas.android.com/apk/res/android"
+    
+    android:delay="0.5"
+    android:animation="@anim/indexshang"
+    android:animationOrder="normal"
+    >  
+ 
+    
+    
+
+
+ 
+              </layoutAnimation>    
+ <!--       <rotate  
+        android:fromDegrees="0"  
+        android:toDegrees="+359"  
+        android:pivotX="50%"  
+        android:pivotY="50%"  
+        android:duration="5000">  
+        </rotate>  
+ 
+
+fromAlpha为动画起始时的透明度；
+
+toAlpha为动画结束时的透明度；
+
+interpolator为制定一个动画的插入器；
+
+fromXScale为动画起始时x坐标上的伸缩尺寸；
+
+toXScale为动画结束时x坐标上的伸缩尺寸；
+
+fromYScale为动画起始时y坐标上的伸缩尺寸；
+
+toYScale为动画结束时y坐标上的伸缩尺寸；
+
+pivotX和pivotY设置动画相对于自身的位置；
+
+fillAfter表示动画的转换在动画结束后是否被应用；
+
+fromDegrees为动画起始时物件的角度；
+
+toDegrees为动画结束时物件旋转的角度。   -->

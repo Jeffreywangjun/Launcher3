@@ -18,4 +18,5 @@
     <!-- the area at the edge of the screen that makes the workspace go left
          or right while you're dragging. -->
     <dimen name="scroll_zone">100dip</dimen>
+	  <dimen name="activity_horizontal_margin">128dp</dimen>
 </resources>

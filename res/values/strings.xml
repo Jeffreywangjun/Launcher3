@@ -261,7 +261,30 @@
     <string name="widget_resized">Widget resized to width <xliff:g example="2" id="number">%1$s</xliff:g> height <xliff:g example="1" id="number">%2$s</xliff:g></string>
 
     <string name="rgk_launcher">RLauncher</string>
+    <!--add by lihuachun(start)-->
+    <string name="shuiadongqiegemiaoshu">播放时甩动手机切换到下一首</string>
+    <string name="pingmudianliangshiaidongy6ouxiao">屏幕点亮时甩动有效</string>
+    <string name="bimianwushengxiao">仅亮屏时有效，避免颠簸误生效</string>
+    <string name="y6ouy6ay6iny6uexiangshouy6ouy6a">优雅音乐，享受优雅</string>
+    <string name="musict5ext5">music</string>
+    <string name="gequ222">歌曲 | 222</string>
+    <string name="gesghou111">歌手 | 111</string>
+    <string name="zhuanji2t5t5">专辑 | 255</string>
+    <string name="quedingeee">确定</string>
+    <string name="total_time">03:20</string>
+    <string name="allmusic">999</string>
+    <string name="fengexian">/</string>
+    <string name="currentId">0</string>
+    <string name="current_time">00:00</string>
+    <string name="musicname">优雅音乐，享受优雅</string>
+    <string name="sinername">优雅音乐</string>
+    <string name="about">关于</string>
 
+    <array name="album_options">
+        <item>Song List</item>
+        <item>Change Album Art</item>
+    </array>
+    <!--add by lihuachun(end)-->
     <!--add by luoran(start)-->
     <string name="app_name">Sate Lite</string>
     <string name="recent">Recent</string>

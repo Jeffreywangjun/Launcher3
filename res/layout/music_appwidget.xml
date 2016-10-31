@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widgetmainrela"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/widgetheiinage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/gfdhthtfdz"
+        android:layout_centerHorizontal="true"
+        android:layout_toLeftOf="@+id/rewfsgererwrew"
+        android:layout_toRightOf="@+id/fgsegrhrefggggg"
+        android:background="@drawable/icon_panel_album_mask" />
+
+    <ImageView
+        android:id="@+id/widget_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/widgetheiinage"
+        android:layout_alignTop="@+id/gfdhthtfdz"
+        android:layout_toLeftOf="@+id/rewfsgererwrew"
+        android:layout_toRightOf="@+id/fgsegrhrefggggg"
+        android:alpha="0.4"
+        android:background="@drawable/icon_panel_album"
+        android:scaleType="fitXY" />
+
+    <ImageView
+        android:id="@+id/gegerfdsf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/widget_xiangxi"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/widgetbottom" />
+
+    <ImageView
+        android:id="@+id/widget_xiangxi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/icon_panel_footer_bg22" />
+
+    <ImageView
+        android:id="@+id/gfdhthtfdz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/widget_xiangxi"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/icon_panel_album_foregr" />
+
+    <ImageView
+        android:id="@+id/fgsegrhrefggggg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/widget_xiangxi"
+        android:layout_alignLeft="@+id/gfdhthtfdz"
+        android:background="@drawable/leftandright" />
+
+    <ImageView
+        android:id="@+id/rewfsgererwrew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/widget_xiangxi"
+        android:layout_alignRight="@+id/gfdhthtfdz"
+        android:background="@drawable/leftandright" />
+
+    <!-- 放圆形进度条和上下按钮 -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/widget_xiangxi"
+        android:layout_alignTop="@+id/gegerfdsf" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true" >
+
+            <!-- 圆环背景 -->
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icon_panel_progress_bgw" />
+
+            <!-- 左边半圆 -->
+
+            <ImageView
+                android:id="@+id/icon_panel_progress_barleft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icon_panel_progress_barleft" />
+
+            <!-- 左边黑园 -->
+
+            <ImageView
+                android:id="@+id/icon_panel_progress_bg2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icon_panel_progress_bg2" />
+
+            <ImageView
+                android:id="@+id/leftyuanquan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icon_panel_progress_barright"
+                android:visibility="invisible" />
+
+            <!-- 小点 -->
+
+            <ImageView
+                android:id="@+id/thumb2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icon_panel_progress_thumb2" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relat5ivebot5t5om"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true" >
+
+            <!-- 上一首 -->
+
+            <ImageView
+                android:id="@+id/widget_frontBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="37sp"
+                android:layout_toLeftOf="@+id/widget_startBtn"
+                android:src="@drawable/widget_pre" />
+
+            <!-- 播放 -->
+
+            <ImageView
+                android:id="@+id/widget_startBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/widget_play" />
+
+            <!-- 下一曲 -->
+
+            <ImageView
+                android:id="@+id/widget_nextBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="37sp"
+                android:layout_toRightOf="@+id/widget_startBtn"
+                android:src="@drawable/widget_next" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/singernam"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/widget_logo"
+        android:layout_alignRight="@+id/widget_logo"
+        android:layout_alignTop="@+id/widget_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="5sp"
+        android:layout_marginRight="5sp" >
+
+        <TextView
+            android:id="@+id/widgettitlemain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="4sp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:shadowColor="#000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:singleLine="true"
+            android:text="点击播放按钮开始播放"
+            android:textColor="#e2e1e1"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widgetsinger"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/widgettitlemain"
+            android:layout_centerHorizontal="true"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:shadowColor="#000000"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:singleLine="true"
+            android:text="歌手"
+            android:textColor="#a3a3a3"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+</RelativeLayout>

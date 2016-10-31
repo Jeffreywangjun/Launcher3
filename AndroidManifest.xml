@@ -157,7 +157,22 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <!-- lihuachun -->
+        <activity
+            android:name="com.android.launcher3.music.PlayMusicActivity"
+            />
+        <service android:name="com.android.launcher3.music.PlayMusicService" />
 
+        <receiver android:name="MusicAppWidgetProvider" >
+            <intent-filter>
+                <action android:name="com.example.action.CLICK" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/music_appwidget_info" />
+        </receiver>
         <activity
             android:name="com.android.launcher3.ToggleWeightWatcher"
             android:enabled="@bool/debug_memory_enabled"

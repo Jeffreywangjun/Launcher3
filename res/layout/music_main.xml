@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/music_main"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#000000" >
+
+    <ImageView
+        android:id="@+id/imagebg2"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/video_stub_large"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/imagebg"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/video_stub_large"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/backalpha"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:alpha="0.0"
+        android:background="#000000" />
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/video_stub_alpha" />
+
+    <!-- 显示歌词的界面 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/relative"
+        android:orientation="vertical" >
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </android.support.v4.view.ViewPager>
+    </LinearLayout>
+
+    <!-- 播放、上一首、下一首按钮 -->
+
+    <RelativeLayout
+        android:id="@+id/relative"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/music_start_time"
+        android:layout_marginBottom="10sp" >
+
+        <ImageButton
+            android:id="@+id/music_rewind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/music_play"
+            android:background="@drawable/prevshang" />
+
+        <ImageButton
+            android:id="@+id/music_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/play1" />
+
+        <ImageButton
+            android:id="@+id/music_foward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/music_play"
+            android:background="@drawable/prev_xia" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/currentmusicId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/music_start_time"
+        android:layout_toLeftOf="@+id/fengexian"
+        android:text="@string/currentId"
+        android:textColor="#8b8b8b"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/fengexian"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/music_start_time"
+        android:layout_centerHorizontal="true"
+        android:text="@string/fengexian"
+        android:textColor="#8b8b8b"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <!-- 全部歌曲数目 -->
+
+    <TextView
+        android:id="@+id/allmusic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/music_start_time"
+        android:layout_toRightOf="@+id/fengexian"
+        android:text="@string/allmusic"
+        android:textColor="#8b8b8b"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <!-- 歌曲播放进度（文字） -->
+
+    <TextView
+        android:id="@+id/music_start_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/music_seekBar"
+        android:layout_alignLeft="@+id/music_seekBar"
+        android:layout_marginLeft="16sp"
+        android:text="@string/current_time"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <!-- 歌曲播放进度（小点） -->
+
+    <SeekBar
+        android:id="@+id/music_seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="3sp"
+        android:max="1000"
+        android:progressDrawable="@drawable/seekbar_imgg"
+        android:thumb="@drawable/fast_seek_progress" />
+
+    <!-- 歌曲总时长 -->
+
+    <TextView
+        android:id="@+id/music_end_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/music_seekBar"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16sp"
+        android:text="@string/total_time"
+        android:textColor="#8b8b8b"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <!-- 歌名 -->
+
+    <TextView
+        android:id="@+id/music_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18sp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center_horizontal"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="@string/musicname"
+        android:textColor="#ffffff"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <!-- 歌手 -->
+
+    <TextView
+        android:id="@+id/music_singer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/music_name"
+        android:layout_marginTop="2sp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center_horizontal"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:scrollbars="horizontal"
+        android:singleLine="true"
+        android:text="@string/sinername"
+        android:textColor="#c4c4c4"
+        android:textSize="12sp" />
+
+</RelativeLayout>

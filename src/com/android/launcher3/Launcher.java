@@ -108,6 +108,7 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -279,6 +280,7 @@ public class Launcher extends Activity
     @Thunk
     Workspace mWorkspace;
     private View mLauncherView;
+
     private View mPageIndicators;
     @Thunk
     DragLayer mDragLayer;
@@ -303,6 +305,7 @@ public class Launcher extends Activity
     private View mWidgetsButton;
     private View t9View; //Add by zhaopenglin for t9 20160920
 private View t9View_left; //Add by lihuachun for t9 20161021
+    RelativeLayout mCustomView;
     private SearchDropTargetBar mSearchDropTargetBar;
 
     // Main container view for the all apps screen.
@@ -777,9 +780,9 @@ private View t9View_left; //Add by lihuachun for t9 20161021
         try {
         	
 
-       // mCustomView = (RelativeLayout) getLayoutInflater().inflate(R.layout.activity_splash, null);
-        	 t9View_left =getLayoutInflater().inflate(R.layout.activity_main, null);
-		 AppInfoHelper.getInstance().setBaseAllAppInfos(LauncherModel.allAddAppItems);
+        mCustomView = (RelativeLayout) getLayoutInflater().inflate(R.layout.activity_splash, null);
+        	// t9View_left =getLayoutInflater().inflate(R.layout.activity_main, null);
+		// AppInfoHelper.getInstance().setBaseAllAppInfos(LauncherModel.allAddAppItems);
 	
 		
         	
@@ -788,7 +791,8 @@ private View t9View_left; //Add by lihuachun for t9 20161021
             e.printStackTrace();
         }
 
-        addCustomContentToLeft(t9View_left);
+       // addCustomContentToLeft(t9View_left);
+        addCustomContentToLeft(mCustomView);
     }
 public void addCustomContentToLeft(final View customView) {
 
@@ -1461,6 +1465,7 @@ public void addCustomContentToLeft(final View customView) {
 
     public void addToCustomContentPage(View customContent,
                                        CustomContentCallbacks callbacks, String description) {
+       
         mWorkspace.addToCustomContentPage(customContent, callbacks, description);
     }
 
