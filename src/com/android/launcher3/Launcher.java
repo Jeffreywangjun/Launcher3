@@ -135,7 +135,7 @@ import com.android.launcher3.widget.WidgetHostViewLoader;
 import com.android.launcher3.widget.WidgetsContainerView;
 
 import com.mediatek.launcher3.ext.LauncherLog;
-
+import android.Manifest;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
@@ -306,8 +306,9 @@ public class Launcher extends Activity
     private View t9View; //Add by zhaopenglin for t9 20160920
 private View t9View_left; //Add by lihuachun for t9 20161021
     RelativeLayout mCustomView;
+    private static boolean mPermissionReqProcessed = false;
     private SearchDropTargetBar mSearchDropTargetBar;
-
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
     // Main container view for the all apps screen.
     @Thunk
     AllAppsContainerView mAppsView;
@@ -542,8 +543,39 @@ private View t9View_left; //Add by lihuachun for t9 20161021
         if (mLauncherCallbacks != null) {
             mLauncherCallbacks.preOnCreate();
         }
-
         super.onCreate(savedInstanceState);
+
+        mSavedState = savedInstanceState;
+        if (getApplicationContext().checkSelfPermission(
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+               ) {
+            requestMusicPermissions();
+            mPermissionReqProcessed = false;
+        } else {
+           // onCreateContinue(mSavedInstanceState);
+            mPermissionReqProcessed = true;
+            onCreateContinue(mSavedInstanceState);
+        }
+
+    }
+
+
+    private void requestMusicPermissions() {
+//        this.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//            REQUEST_EXTERNAL_STORAGE);
+//        this.requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},
+//            REQUEST_EXTERNAL_STORAGE);
+//        this.requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE},
+//            REQUEST_EXTERNAL_STORAGE);
+//        this.requestPermissions(new String[]{Manifest.permission.READ_CALENDAR},
+//            REQUEST_EXTERNAL_STORAGE);
+        this.requestPermissions(new String[] {
+                Manifest.permission.READ_EXTERNAL_STORAGE
+                }, REQUEST_EXTERNAL_STORAGE);
+    }
+
+    public void onCreateContinue(Bundle savedInstanceState) {
+
 
         /*Intent intent = new Intent(Launcher.this, RgkSateLiteService.class);*/
         mSwipeApplication = (RgkApplication) getApplication();
@@ -627,6 +659,7 @@ private View t9View_left; //Add by lihuachun for t9 20161021
         lockAllApps();
 
         mSavedState = savedInstanceState;
+
         restoreState(mSavedState);
 
         if (PROFILE_STARTUP) {
@@ -680,8 +713,9 @@ private View t9View_left; //Add by lihuachun for t9 20161021
             showFirstRunActivity();
             showFirstRunClings();
         }
-    }
 
+
+    }
     @Override
     public void onSettingsChanged(String settings, boolean value) {
         if (Utilities.ALLOW_ROTATION_PREFERENCE_KEY.equals(settings)) {
@@ -1086,9 +1120,24 @@ public void addCustomContentToLeft(final View customView) {
      */
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
-        if (mLauncherCallbacks != null) {
-            mLauncherCallbacks.onRequestPermissionsResult(requestCode, permissions,
-                    grantResults);
+        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                // permission was granted, yay! Do the
+                // Storage-related task you need to do.
+                mPermissionReqProcessed = true;
+                onCreateContinue(mSavedInstanceState);
+                onResumeContinue();
+            } else {
+
+                // permission denied, boo! Disable the
+                // functionality that depends on this permission.
+                finish();
+                Toast.makeText(this, "RLauncher Exit !!!!!!", Toast.LENGTH_SHORT)
+                        .show();
+            }
         }
     }
 
@@ -1211,6 +1260,12 @@ public void addCustomContentToLeft(final View customView) {
         }
 
         super.onResume();
+        if (mPermissionReqProcessed) {
+            onResumeContinue();
+        }
+    }
+    public void onResumeContinue() {
+
         if (LauncherLog.DEBUG) {
             LauncherLog.d(TAG, "(Launcher)onResume: mRestoring = " + mRestoring
                     + ", mOnResumeNeedsLoad = " + mOnResumeNeedsLoad + ",mOrientationChanged = "
@@ -1289,7 +1344,7 @@ public void addCustomContentToLeft(final View customView) {
         reinflateQSBIfNecessary();
 
         if (DEBUG_RESUME_TIME) {
-            Log.d(TAG, "Time spent in onResume: " + (System.currentTimeMillis() - startTime));
+          //  Log.d(TAG, "Time spent in onResume: " + (System.currentTimeMillis() - startTime));
         }
 
         if (mWorkspace.getCustomContentCallbacks() != null) {
@@ -1316,7 +1371,6 @@ public void addCustomContentToLeft(final View customView) {
             mLauncherCallbacks.onResume();
         }
     }
-
     @Override
     protected void onPause() {
 
