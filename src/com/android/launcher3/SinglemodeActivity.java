@@ -1,13 +1,10 @@
 package com.android.launcher3;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
-import android.util.Log;
 
 
 /**
@@ -40,7 +37,6 @@ public class SinglemodeActivity extends Activity {
                         ALL_APP_SINGLEMODE = false;
                     }
                     LauncherAppState.getInstance().getModel().forceReload();
-                    Log.d("GGG", "走到这一步了！ ");
                     return true;
                 }
             });

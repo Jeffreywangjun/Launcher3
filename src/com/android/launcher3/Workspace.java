@@ -4214,12 +4214,12 @@ int NavigationBar_H= getNavigationBarHeight();//add by lihuachun
 
     @Override
     public boolean supportsAppInfoDropTarget() {
-        return true;
+        return LauncherAppState.isDisableAllApps();
     }
 
     @Override
     public boolean supportsDeleteDropTarget() {
-        return false;
+        return !LauncherAppState.isDisableAllApps();
     }
 
     @Override

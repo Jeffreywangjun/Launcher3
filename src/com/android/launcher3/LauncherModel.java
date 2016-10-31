@@ -1697,9 +1697,8 @@ public class LauncherModel extends BroadcastReceiver
                 if (DEBUG_LOADERS) Log.d(TAG, "step 2: loading all apps");
                 loadAndBindAllApps();
             }
+            // Add a feature of hide all apps by Huangchencong
 			if (LauncherAppState.isDisableAllApps())
-                // Ensure that all the applications that are in the system are
-                // represented on the home screen.
                     verifyApplications();
 
             // Clear out this reference, otherwise we end up holding it until all of the
@@ -1719,7 +1718,8 @@ public class LauncherModel extends BroadcastReceiver
             }
         }
 
-		private void verifyApplications() {
+		// Add for hide all apps by Huangchencong
+        private void verifyApplications() {
         final Context context = mApp.getContext();
        // Cross reference all the applications in our apps list with items in the workspace
         ArrayList<ItemInfo> tmpInfos;
