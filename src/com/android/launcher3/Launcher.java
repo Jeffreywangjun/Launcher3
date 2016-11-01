@@ -554,7 +554,7 @@ private View t9View_left; //Add by lihuachun for t9 20161021
         } else {
            // onCreateContinue(mSavedInstanceState);
             mPermissionReqProcessed = true;
-            onCreateContinue(mSavedInstanceState);
+            onCreateContinue(mSavedState);
         }
 
     }
@@ -800,7 +800,7 @@ private View t9View_left; //Add by lihuachun for t9 20161021
      * To be overridden by subclasses to hint to Launcher that we have custom content
      */
     protected boolean hasCustomContentToLeft() {
-      return true;
+      return false;
     }
 
     /**
@@ -1128,7 +1128,7 @@ public void addCustomContentToLeft(final View customView) {
                 // permission was granted, yay! Do the
                 // Storage-related task you need to do.
                 mPermissionReqProcessed = true;
-                onCreateContinue(mSavedInstanceState);
+                onCreateContinue(mSavedState);
                 onResumeContinue();
             } else {
 
