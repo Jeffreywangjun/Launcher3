@@ -241,4 +241,8 @@
     <dimen name="toast_text_size">20sp</dimen>
     <!--t9 end-->
     <dimen name="preview_h_space">4dp</dimen><!--Add by yeyu for screen edit 20160910 -->
+    <!--Freeze start-->	
+    <dimen name="folder_available_icon_space">47dp</dimen>
+    <dimen name="folder_available_icon_height">6dp</dimen>
+    <!--Freeze end-->	
 </resources>

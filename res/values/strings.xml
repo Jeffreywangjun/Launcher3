@@ -338,4 +338,15 @@
     <string name="long_click_start_voice">长按可语音搜索应用</string>
     <!--t9 end-->
     <string name="SingleMode_button_text">SingleMode</string>
+
+    <!--Freeze start-->
+    <string name="freeze">Freeze App</string>
+
+    <string name="app_freeze_dialog_message">Are you sure freeze the %1$s app?</string>
+    <string name="app_unfreeze_dialog_message">Are you sure unfreeze the %1$s app?</string>
+    <string name="toast_app_freeze_success">%1$s is freezed successful</string>
+    <string name="toast_app_unfreeze_success">%1$s is unfreezed successful</string>
+
+    <string name="naming_error">This folder already exists</string>
+    <!--Freeze end-->
 </resources>

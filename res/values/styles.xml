@@ -175,4 +175,8 @@
         <item name="android:background">@drawable/fourmenutn</item>
         <item name="android:layout_weight">1</item>
     </style>
+    <!--taoqi-->
+    <style name="DialogTheme" parent="android:style/Theme.DeviceDefault.Light.Dialog.NoActionBar">
+    </style>
+    <!--taoqi-->
 </resources>

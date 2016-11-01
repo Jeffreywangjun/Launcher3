@@ -60,6 +60,7 @@ import com.android.launcher3.compat.PackageInstallerCompat;
 import com.android.launcher3.compat.PackageInstallerCompat.PackageInstallInfo;
 import com.android.launcher3.compat.UserHandleCompat;
 import com.android.launcher3.compat.UserManagerCompat;
+import com.android.launcher3.freezeapp.FreezePackageManagerAdapter;
 import com.android.launcher3.model.MigrateFromRestoreTask;
 import com.android.launcher3.model.WidgetsModel;
 import com.android.launcher3.util.ComponentKey;
@@ -68,7 +69,6 @@ import com.android.launcher3.util.LongArrayMap;
 import com.android.launcher3.util.ManagedProfileHeuristic;
 import com.android.launcher3.util.Thunk;
 
-import com.mediatek.launcher3.ext.AllApps;
 import com.mediatek.launcher3.ext.LauncherLog;
 
 import java.lang.ref.WeakReference;
@@ -145,7 +145,7 @@ public class LauncherModel extends BroadcastReceiver
     @Thunk WeakReference<Callbacks> mCallbacks;
 
     // < only access in worker thread >
-    AllAppsList mBgAllAppsList;
+    public AllAppsList mBgAllAppsList;
     public static  ArrayList<AppInfo> allAddAppItems = new ArrayList<AppInfo>();//add by zhaopenglin for t9
     // Entire list of widgets.
     WidgetsModel mBgWidgetsModel;
@@ -2624,6 +2624,7 @@ public class LauncherModel extends BroadcastReceiver
                 LongArrayMap<FolderInfo> otherScreenFolders) {
 
             int total = folders.size();
+            Log.i("LauncherModel","folders.size() = "+folders.size());
             for (int i = 0; i < total; i++) {
                 long id = folders.keyAt(i);
                 FolderInfo folder = folders.valueAt(i);
@@ -2997,6 +2998,16 @@ public class LauncherModel extends BroadcastReceiver
 
             // Clear the list of apps
             mBgAllAppsList.clear();
+            //taoqi: query freeze databases
+            ContentResolver cr = mContext.getContentResolver();
+            Cursor cs = cr.query(Uri.parse("content://com.rgk.fingerprint/freeze"), null, null, null, null);
+            List<String> list = new ArrayList<>();
+            if(cs!=null){
+                while (cs.moveToNext()) {
+                    list.add(cs.getString(1));
+                }
+            }
+            //taoqi: end
             for (UserHandleCompat user : profiles) {
                 // Query for the set of apps
                 final long qiaTime = DEBUG_LOADERS ? SystemClock.uptimeMillis() : 0;
@@ -3015,6 +3026,19 @@ public class LauncherModel extends BroadcastReceiver
                 // Create the ApplicationInfos
                 for (int i = 0; i < apps.size(); i++) {
                     LauncherActivityInfoCompat app = apps.get(i);
+                    //taoqi: load all app and shield freezed app
+                    String pack = app.getApplicationInfo().packageName;
+                    boolean con = false;
+                    for(String p:list){
+                        if(p.equals(pack)){
+                            con = true;
+                            break;
+                        }
+                    }
+                    if(con){
+                        continue;
+                    }
+                    //taoqi: end
                     // This builds the icon bitmaps.
                     mBgAllAppsList.add(new AppInfo(mContext, app, user, mIconCache));
                 }
@@ -3789,6 +3813,12 @@ public class LauncherModel extends BroadcastReceiver
                 }
             } else if (i instanceof FolderInfo) {
                 FolderInfo info = (FolderInfo) i;
+                //A: taoqi 20190927(start) prevent remove in Freeze folder when add FreezeApp
+                Log.i("OP_REMOVE", "--" + info.title);
+                if (info.title.equals("Freeze")&& FreezePackageManagerAdapter.isDelete) {
+                    continue;
+                }
+                //A: taoqi 20190927(end)
                 for (ShortcutInfo s : info.contents) {
                     ComponentName cn = s.getTargetComponent();
                     if (cn != null && f.filterItem(info, s, cn)) {

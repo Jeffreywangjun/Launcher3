@@ -148,4 +148,9 @@
         <attr name="satelite_item_action" format="reference" />
     </declare-styleable>
     <!--add by luoran(end)-->
+    <!--add by taoqi(start)-->
+    <declare-styleable name="IceAnimationLayout">
+        <attr name="space" format="dimension" />
+    </declare-styleable>
+    <!--add by taoqi(end)-->
 </resources>

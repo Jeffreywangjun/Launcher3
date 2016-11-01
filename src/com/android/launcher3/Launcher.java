@@ -35,7 +35,6 @@ import android.app.ActivityManager;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.SearchManager;
-import android.app.Service;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
@@ -59,7 +58,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
@@ -71,10 +69,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PowerManager;
 import android.os.StrictMode;
 import android.os.SystemClock;
-import android.os.Trace;
 import android.os.UserHandle;
 import android.text.Selection;
 import android.text.SpannableStringBuilder;
@@ -122,6 +118,7 @@ import com.android.launcher3.compat.LauncherAppsCompat;
 import com.android.launcher3.compat.UserHandleCompat;
 import com.android.launcher3.compat.UserManagerCompat;
 import com.android.launcher3.config.ProviderConfig;   // wangjun delete ---for __COMPILE_PASS__
+import com.android.launcher3.freezeapp.FreezeActivity;
 import com.android.launcher3.model.WidgetsModel;
 import com.android.launcher3.service.RgkSateLiteService;
 import com.android.launcher3.t9.AppInfoHelper;
@@ -343,7 +340,7 @@ private View t9View_left; //Add by lihuachun for t9 20161021
 
     private Bundle mSavedInstanceState;
 
-    private LauncherModel mModel;
+    public static LauncherModel mModel;
     private IconCache mIconCache;
     @Thunk
     boolean mUserPresent = true;
@@ -3235,10 +3232,16 @@ public void addCustomContentToLeft(final View customView) {
         }
 
         if (!info.opened && !folderIcon.getFolder().isDestroyed()) {
-            // Close any open folder
-            closeFolder();
-            // Open the requested folder
-            openFolder(folderIcon);
+            //M: taoqi 20160927(start) start FreezeActivity when click "Freeze" folder
+            if(info.title.equals("Freeze")){
+                startActivity(new Intent(this, FreezeActivity.class));
+            }else {//normal Open
+                // Close any open folder
+                closeFolder();
+                // Open the requested folder
+                openFolder(folderIcon);
+            }
+            //M: taoqi 20160927(end)
         } else {
             // Find the open folder...
             int folderScreen;
@@ -4566,7 +4569,9 @@ public void addCustomContentToLeft(final View customView) {
     /**
      * Implementation of the method from LauncherModel.Callbacks.
      */
+    public static FolderInfo freeze;//A: taoqi
     public void bindFolders(final LongArrayMap<FolderInfo> folders) {
+        freeze = folders.get(1);//A: taoqi
         if (LauncherLog.DEBUG) {
             LauncherLog.d(TAG, "bindFolders: this = " + this);
         }

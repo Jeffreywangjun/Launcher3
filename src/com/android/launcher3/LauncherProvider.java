@@ -251,6 +251,21 @@ public class LauncherProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
+        //A:  taoqi prevent delete Freeze folder
+        if ("content://com.android.launcher3.settings.rgk/favorites/1".equals(uri.toString())) {
+            return 111;
+        }
+        if(selection !=null && selection.contains("intent=")){
+            mOpenHelper.getWritableDatabase().delete("favorites",selection,selectionArgs);
+            return 111;
+        }
+        try {
+            mOpenHelper.getWritableDatabase().delete("favorites", "_id=" + ContentUris.parseId(uri) + " and container!=1", selectionArgs);
+            return 111;
+        }catch (NumberFormatException e){
+            Log.i("try-catch","this exception when delete folder in screen e = " + e);
+        }
+        //A:  taoqi end
         SqlArguments args = new SqlArguments(uri, selection, selectionArgs);
 
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -569,7 +584,6 @@ public class LauncherProvider extends ContentProvider {
             long userSerialNumber = userManager.getSerialNumberForUser(
                     UserHandleCompat.myUserHandle());
 
-
             db.execSQL("CREATE TABLE favorites (" +
                     "_id INTEGER PRIMARY KEY," +
                     "title TEXT," +
@@ -607,6 +621,9 @@ public class LauncherProvider extends ContentProvider {
 
             db.execSQL("CREATE TABLE IF NOT EXISTS sateliterecentfavorites (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + "item_intent VARCHAR)");
+
+            db.execSQL("insert into favorites(title,container,screen,cellX,cellY,spanX,spanY,itemType,appWidgetId) values(\"Freeze\"" +
+                    ",-100,0,0,1,1,1,2,-1)");//A:taoqi insert Freeze folder
             addWorkspacesTable(db);
 
             // Database was just created, so wipe any previous widgets

@@ -290,6 +290,18 @@
                 <action android:name="com.rgk.sendMessage" />
             </intent-filter>
         </receiver>
+        <!-- freeze app -->
+        <activity
+            android:name=".freezeapp.FreezeActivity"
+            android:icon="@mipmap/ic_launcher_home"
+            android:label="@string/freeze"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+
+        <provider android:name=".freezeapp.FreezeProvider"
+            android:authorities="com.rgk.fingerprint"
+            android:exported="false">
+        </provider>
 
     </application>
 </manifest>

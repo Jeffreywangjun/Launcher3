@@ -2787,8 +2787,18 @@ int NavigationBar_H= getNavigationBarHeight();//add by lihuachun
 
         if (dropOverView instanceof FolderIcon) {
             FolderIcon fi = (FolderIcon) dropOverView;
+            //A: taoqi 20160925(start) target folder name
+            String folderName = "" + fi.getFolderInfo().title;
+            Log.i("Launcher:folder", "Workspace addToExistingFolderIfNecessary " + folderName);
+            //A: taoqi 20160925(end)
             if (fi.acceptDrop(d.dragInfo)) {
-                fi.onDrop(d);
+                //M: taoqi 20160925(start) add try-catch
+                try {
+                    fi.onDrop(d);
+                } catch (Exception e) {
+                    Log.e("Launcher:folder", "Workspace addToExistingFolderIfNecessary e = ");
+                }
+                //M: taoqi 20160925(end)
 
                 // if the drag started here, we need to remove it from the workspace
                 if (!external) {
