@@ -19,6 +19,7 @@ package com.android.launcher3;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -51,6 +52,7 @@ public class AppInfo extends ItemInfo {
      */
     public Bitmap iconBitmap;
 
+    public ApplicationInfo applicationInfo;//A : taoqi
     /**
      * Indicates whether we're using a low res icon
      */

@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="10dp" >
+
+    <FrameLayout
+        android:layout_width="100dp"
+        android:layout_height="70dp" >
+
+        <ImageView
+            android:id="@+id/ice_back"
+            android:layout_width="70dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="15dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ice_bg" />
+
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="100dp"
+            android:layout_height="70dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="15dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_allapps" />
+
+        <ImageView
+            android:id="@+id/ice_over"
+            android:layout_width="70dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="15dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_ice" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:gravity="center"/>
+
+</LinearLayout>

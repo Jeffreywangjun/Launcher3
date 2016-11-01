@@ -1,9 +1,4 @@
 /*
-* Copyright (C) 2014 MediaTek Inc.
-* Modification based on code covered by the mentioned copyright
-* and/or permission notice(s).
-*/
-/*
  * Copyright (C) 2008 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +22,7 @@ import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -36,6 +32,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Looper;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,9 +46,8 @@ import android.widget.TextView;
 
 import com.android.launcher3.DropTarget.DragObject;
 import com.android.launcher3.FolderInfo.FolderListener;
+import com.android.launcher3.freezeapp.FreezeActivity;
 import com.android.launcher3.util.Thunk;
-
-import com.mediatek.launcher3.ext.LauncherLog;
 
 import java.util.ArrayList;
 
@@ -59,18 +55,25 @@ import java.util.ArrayList;
  * An icon that can appear on in the workspace representing an {@link UserFolder}.
  */
 public class FolderIcon extends FrameLayout implements FolderListener {
-    private static final String TAG = "FolderIcon";
-
-    @Thunk Launcher mLauncher;
-    @Thunk Folder mFolder;
+    @Thunk
+    Launcher mLauncher;
+    @Thunk
+    Folder mFolder;
     private FolderInfo mInfo;
-    @Thunk static boolean sStaticValuesDirty = true;
+    @Thunk
+    static boolean sStaticValuesDirty = true;
 
     private CheckLongPressHelper mLongPressHelper;
     private StylusEventHelper mStylusEventHelper;
 
     // The number of icons to display in the
-    public static final int NUM_ITEMS_IN_PREVIEW = 3;
+
+    // Modify BUG_ID:NONE zhaopenglin 20150601(start)
+    //private static final int NUM_ITEMS_IN_PREVIEW = 3;
+    public static int NUM_ITEMS_IN_PREVIEW;
+    private static final int NUM_COLUMN_IN_PREVIEW = 2;
+    // Modify BUG_ID:NONE zhaopenglin 20150601(end)
+
     private static final int CONSUMPTION_ANIMATION_DURATION = 100;
     private static final int DROP_IN_ANIMATION_DURATION = 400;
     private static final int INITIAL_ITEM_ANIMATION_DURATION = 350;
@@ -100,8 +103,10 @@ public class FolderIcon extends FrameLayout implements FolderListener {
 
     public static Drawable sSharedFolderLeaveBehind = null;
 
-    @Thunk ImageView mPreviewBackground;
-    @Thunk BubbleTextView mFolderName;
+    @Thunk
+    ImageView mPreviewBackground;
+    @Thunk
+    BubbleTextView mFolderName;
 
     FolderRingAnimator mFolderRingAnimator = null;
 
@@ -117,15 +122,18 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     private float mMaxPerspectiveShift;
     boolean mAnimating = false;
     private Rect mOldBounds = new Rect();
-
+    private static boolean is_rect_folder;
     private float mSlop;
 
     private PreviewItemDrawingParams mParams = new PreviewItemDrawingParams(0, 0, 0, 0);
-    @Thunk PreviewItemDrawingParams mAnimParams = new PreviewItemDrawingParams(0, 0, 0, 0);
-    @Thunk ArrayList<ShortcutInfo> mHiddenItems = new ArrayList<ShortcutInfo>();
+    @Thunk
+    PreviewItemDrawingParams mAnimParams = new PreviewItemDrawingParams(0, 0, 0, 0);
+    @Thunk
+    ArrayList<ShortcutInfo> mHiddenItems = new ArrayList<ShortcutInfo>();
 
     private Alarm mOpenAlarm = new Alarm();
-    @Thunk ItemInfo mDragInfo;
+    @Thunk
+    ItemInfo mDragInfo;
 
     public FolderIcon(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -138,6 +146,14 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     private void init() {
+        //Add by zhaopenglin for change the folder icon  20150719 start
+        is_rect_folder = true;
+        if (is_rect_folder) {
+            NUM_ITEMS_IN_PREVIEW = 4;
+        } else {
+            NUM_ITEMS_IN_PREVIEW = 3;
+        }
+        //Add by zhaopenglin for change the folder icon  20150719 end
         mLongPressHelper = new CheckLongPressHelper(this);
         mStylusEventHelper = new StylusEventHelper(this);
         setAccessibilityDelegate(LauncherAppState.getInstance().getAccessibilityDelegate());
@@ -151,12 +167,13 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     static FolderIcon fromXml(int resId, Launcher launcher, ViewGroup group,
-            FolderInfo folderInfo, IconCache iconCache) {
-        return fromXml(resId, launcher, group, folderInfo, iconCache, false);
+                              FolderInfo folderInfo, IconCache iconCache) {
+        return fromXml(resId, launcher, group, folderInfo, iconCache, false);//delete Freeze 7
     }
 
     static FolderIcon fromXml(int resId, Launcher launcher, ViewGroup group,
-            FolderInfo folderInfo, IconCache iconCache, boolean fromAllApp) {
+                              FolderInfo folderInfo, IconCache iconCache, boolean fromAllApp) {
+        Log.i("Launcher:FolderIcon", "fromXml " + folderInfo.title);
         @SuppressWarnings("all") // suppress dead code warning
         final boolean error = INITIAL_ITEM_ANIMATION_DURATION >= DROP_IN_ANIMATION_DURATION;
         if (error) {
@@ -191,13 +208,14 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         Folder folder = Folder.fromXml(launcher);
         folder.setDragController(launcher.getDragController());
         folder.setFolderIcon(icon);
-        folder.bind(folderInfo);
+        folder.bind(folderInfo);//delete Freeze 6
         icon.mFolder = folder;
 
         icon.mFolderRingAnimator = new FolderRingAnimator(launcher, icon);
         folderInfo.addListener(icon);
 
         icon.setOnFocusChangeListener(launcher.mFocusHandler);
+        Log.i("Launcher:FolderIcon", "icon = " + icon.getFolderInfo().title);
         return icon;
     }
 
@@ -210,7 +228,8 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     public static class FolderRingAnimator {
         public int mCellX;
         public int mCellY;
-        @Thunk CellLayout mCellLayout;
+        @Thunk
+        CellLayout mCellLayout;
         public float mOuterRingSize;
         public float mInnerRingSize;
         public FolderIcon mFolderIcon = null;
@@ -219,10 +238,12 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         public static int sPreviewSize = -1;
         public static int sPreviewPadding = -1;
 
+        public static int sAvailableIconSpace = -1;//Add BUG_ID:NONE zhaopenglin 20150601
         private ValueAnimator mAcceptAnimator;
         private ValueAnimator mNeutralAnimator;
 
         public FolderRingAnimator(Launcher launcher, FolderIcon folderIcon) {
+            Log.i("Launcher:FolderIcon", "FolderRingAnimator");
             mFolderIcon = folderIcon;
             Resources res = launcher.getResources();
 
@@ -237,6 +258,13 @@ public class FolderIcon extends FrameLayout implements FolderListener {
                 DeviceProfile grid = launcher.getDeviceProfile();
                 sPreviewSize = grid.folderIconSizePx;
                 sPreviewPadding = res.getDimensionPixelSize(R.dimen.folder_preview_padding);
+                //Modify BUG_ID:none zhaopenglin 20150601(start)
+                sAvailableIconSpace = res.getDimensionPixelSize(R.dimen.folder_available_icon_space);
+                //if(true){
+                //    sSharedOuterRingDrawable = res.getDrawable(R.drawable.portal_ring_outer_rect);
+                //    sSharedInnerRingDrawable = res.getDrawable(R.drawable.portal_ring_inner_rect);
+                //    sSharedFolderLeaveBehind = res.getDrawable(R.drawable.portal_ring_rest_rect);
+                //}else{
                 sSharedOuterRingDrawable = res.getDrawable(R.drawable.portal_ring_outer);
                 sSharedInnerRingDrawable = res.getDrawable(R.drawable.portal_ring_inner_nolip);
                 sSharedFolderLeaveBehind = res.getDrawable(R.drawable.portal_ring_rest);
@@ -245,6 +273,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         }
 
         public void animateToAcceptState() {
+            Log.i("Launcher:FolderIcon", "animateToAcceptState");
             if (mNeutralAnimator != null) {
                 mNeutralAnimator.cancel();
             }
@@ -274,6 +303,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         }
 
         public void animateToNaturalState() {
+            Log.i("Launcher:FolderIcon", "animateToNaturalState");
             if (mAcceptAnimator != null) {
                 mAcceptAnimator.cancel();
             }
@@ -318,6 +348,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         }
 
         public void setCellLayout(CellLayout layout) {
+            Log.i("Launcher:FolderIcon", "setCellLayout");
             mCellLayout = layout;
         }
 
@@ -339,6 +370,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     private boolean willAcceptItem(ItemInfo item) {
+        Log.i("Launcher:FolderIcon", "willAcceptItem");
         final int itemType = item.itemType;
         return ((itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION ||
                 itemType == LauncherSettings.Favorites.ITEM_TYPE_SHORTCUT) &&
@@ -347,14 +379,18 @@ public class FolderIcon extends FrameLayout implements FolderListener {
 
     public boolean acceptDrop(Object dragInfo) {
         final ItemInfo item = (ItemInfo) dragInfo;
-        return !mFolder.isDestroyed() && willAcceptItem(item);
+        boolean b = !mFolder.isDestroyed() && willAcceptItem(item);
+        Log.i("Launcher:FolderIcon", "acceptDrop " + b);
+        return b;
     }
 
     public void addItem(ShortcutInfo item) {
+        Log.i("Launcher:FolderIcon", "addItem");
         mInfo.add(item);
     }
 
     public void onDragEnter(Object dragInfo) {
+        Log.i("Launcher:FolderIcon", "onDragEnter");
         if (mFolder.isDestroyed() || !willAcceptItem((ItemInfo) dragInfo)) return;
         CellLayout.LayoutParams lp = (CellLayout.LayoutParams) getLayoutParams();
         CellLayout layout = (CellLayout) getParent().getParent();
@@ -379,6 +415,12 @@ public class FolderIcon extends FrameLayout implements FolderListener {
 
     OnAlarmListener mOnOpenListener = new OnAlarmListener() {
         public void onAlarm(Alarm alarm) {
+            //taoqi return open folder
+            Log.i("Launcher:FolderIcon", "mOnOpenListener " + getFolderInfo().title);
+            if (getFolderInfo().title.equals("Freeze")) {
+                return;
+            }
+            //taoqi end
             ShortcutInfo item;
             if (mDragInfo instanceof AppInfo) {
                 // Came from all apps -- make a copy.
@@ -388,9 +430,6 @@ public class FolderIcon extends FrameLayout implements FolderListener {
             }
             ///M: Added to filter out the PendingAddItemInfo instance.@{
             else if (mDragInfo instanceof PendingAddItemInfo) {
-                if (LauncherLog.DEBUG) {
-                    LauncherLog.d(TAG, "onAlarm: mDragInfo instanceof PendingAddItemInfo");
-                }
                 return;
             }
             ///M: @}
@@ -403,9 +442,10 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     };
 
     public void performCreateAnimation(final ShortcutInfo destInfo, final View destView,
-            final ShortcutInfo srcInfo, final DragView srcView, Rect dstRect,
-            float scaleRelativeToDragLayer, Runnable postAnimationRunnable) {
+                                       final ShortcutInfo srcInfo, final DragView srcView, Rect dstRect,
+                                       float scaleRelativeToDragLayer, Runnable postAnimationRunnable) {
 
+        Log.i("Launcher:FolderIcon", "performCreateAnimation");
         // These correspond two the drawable and view that the icon was dropped _onto_
         Drawable animateDrawable = getTopDrawable((TextView) destView);
         computePreviewDrawingParams(animateDrawable.getIntrinsicWidth(),
@@ -421,6 +461,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     public void performDestroyAnimation(final View finalView, Runnable onCompleteRunnable) {
+        Log.i("Launcher:FolderIcon", "performDestroyAnimation");
         Drawable animateDrawable = getTopDrawable((TextView) finalView);
         computePreviewDrawingParams(animateDrawable.getIntrinsicWidth(),
                 finalView.getMeasuredWidth());
@@ -432,23 +473,20 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     public void onDragExit(Object dragInfo) {
+        Log.i("Launcher:FolderIcon", "onDragExit");
         onDragExit();
     }
 
     public void onDragExit() {
+        Log.i("Launcher:FolderIcon", "onDragExit()");
         mFolderRingAnimator.animateToNaturalState();
         mOpenAlarm.cancelAlarm();
     }
 
     private void onDrop(final ShortcutInfo item, DragView animateView, Rect finalRect,
-            float scaleRelativeToDragLayer, int index, Runnable postAnimationRunnable,
-            DragObject d) {
-        if (LauncherLog.DEBUG) {
-            LauncherLog.d(TAG, "onDrop: item = " + item + ", animateView = "
-                    + animateView + ", finalRect = " + finalRect + ", scaleRelativeToDragLayer = "
-                    + scaleRelativeToDragLayer + ", index = " + index + ", d = " + d);
-        }
-
+                        float scaleRelativeToDragLayer, int index, Runnable postAnimationRunnable,
+                        DragObject d) {
+        Log.i("Launcher:FolderIcon", "onDrop()");
         item.cellX = -1;
         item.cellY = -1;
 
@@ -482,7 +520,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
             center[1] = (int) Math.round(scaleRelativeToDragLayer * center[1]);
 
             to.offset(center[0] - animateView.getMeasuredWidth() / 2,
-                      center[1] - animateView.getMeasuredHeight() / 2);
+                    center[1] - animateView.getMeasuredHeight() / 2);
 
             float finalAlpha = index < NUM_ITEMS_IN_PREVIEW ? 0.5f : 0f;
 
@@ -507,11 +545,9 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     public void onDrop(DragObject d) {
-        if (LauncherLog.DEBUG) {
-            LauncherLog.d(TAG, "onDrop: DragObject = " + d);
-        }
-
+        Log.i("Launcher:FolderIcon", "onDrop(DragObject d)");
         ShortcutInfo item;
+        boolean isDraggingAdd = mInfo.title.equals("Freeze");
         if (d.dragInfo instanceof AppInfo) {
             // Came from all apps -- make a copy
             item = ((AppInfo) d.dragInfo).makeShortcut();
@@ -520,6 +556,18 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         }
         mFolder.notifyDrop();
         onDrop(item, d.dragView, null, 1.0f, mInfo.contents.size(), d.postAnimationRunnable, d);
+        //A: taoqi 20160925(start) start FreezeActivity when dragging to "Freeze" folder
+        String strIntent = item.getIntent().toString();
+        int start = strIntent.indexOf("cmp=com");
+        int end = strIntent.indexOf("/.");
+        String packageName = strIntent.substring(start + 4, end);
+        Log.i("Launcher:FolderIcon", "packageName = " + packageName);
+        if (isDraggingAdd) {
+            Intent intent = new Intent(getContext(), FreezeActivity.class);
+            intent.putExtra("packageName", packageName);
+            mLauncher.startActivity(intent);
+        }
+        //A: taoqi 20160925(end)
     }
 
     private void computePreviewDrawingParams(int drawableSize, int totalSize) {
@@ -559,6 +607,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
             this.scale = scale;
             this.overlayAlpha = overlayAlpha;
         }
+
         float transX;
         float transY;
         float scale;
@@ -567,6 +616,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     private float getLocalCenterForIndex(int index, int[] center) {
+        Log.i("Launcher:FolderIcon", "getLocalCenterForIndex");
         mParams = computePreviewItemDrawingParams(Math.min(NUM_ITEMS_IN_PREVIEW, index), mParams);
 
         mParams.transX += mPreviewOffsetX;
@@ -580,21 +630,46 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     private PreviewItemDrawingParams computePreviewItemDrawingParams(int index,
-            PreviewItemDrawingParams params) {
-        index = NUM_ITEMS_IN_PREVIEW - index - 1;
-        float r = (index * 1.0f) / (NUM_ITEMS_IN_PREVIEW - 1);
-        float scale = (1 - PERSPECTIVE_SCALE_FACTOR * (1 - r));
+                                                                     PreviewItemDrawingParams params) {
+        //Modify BUG_ID:none zhaopenglin 20150601(start)
 
-        float offset = (1 - r) * mMaxPerspectiveShift;
-        float scaledSize = scale * mBaselineIconSize;
-        float scaleOffsetCorrection = (1 - scale) * mBaselineIconSize;
+        float transY;
+        float transX;
+        float totalScale;
+        final int overlayAlpha;
+        if (!is_rect_folder) {
+            index = NUM_ITEMS_IN_PREVIEW - index - 1;
+            float r = (index * 1.0f) / (NUM_ITEMS_IN_PREVIEW - 1);
+            float scale = (1 - PERSPECTIVE_SCALE_FACTOR * (1 - r));
 
-        // We want to imagine our coordinates from the bottom left, growing up and to the
-        // right. This is natural for the x-axis, but for the y-axis, we have to invert things.
-        float transY = mAvailableSpaceInPreview - (offset + scaledSize + scaleOffsetCorrection) + getPaddingTop();
-        float transX = (mAvailableSpaceInPreview - scaledSize) / 2;
-        float totalScale = mBaselineIconScale * scale;
-        final int overlayAlpha = (int) (80 * (1 - r));
+            float offset = (1 - r) * mMaxPerspectiveShift;
+            float scaledSize = scale * mBaselineIconSize;
+            float scaleOffsetCorrection = (1 - scale) * mBaselineIconSize;
+
+            // We want to imagine our coordinates from the bottom left, growing up and to the
+            // right. This is natural for the x-axis, but for the y-axis, we have to invert things.
+            transY = mAvailableSpaceInPreview - (offset + scaledSize + scaleOffsetCorrection) + getPaddingTop() - 3;
+            transX = (mAvailableSpaceInPreview - scaledSize) / 2;
+            //transX = offset + scaleOffsetCorrection;
+            totalScale = mBaselineIconScale * scale;
+            overlayAlpha = (int) (80 * (1 - r));
+        } else {
+            float mAvailableSpaceInFolderIcon = FolderRingAnimator.sAvailableIconSpace;
+            float itemPadding = 2;
+            float scaledSize = (mAvailableSpaceInFolderIcon - itemPadding * NUM_COLUMN_IN_PREVIEW) / NUM_COLUMN_IN_PREVIEW;
+            float scale = scaledSize / mIntrinsicIconSize;
+            float leftMargin = (mAvailableSpaceInPreview - mAvailableSpaceInFolderIcon) / 2;
+            Resources res = getResources();
+            int iconTopToFolderHeight = res.getDimensionPixelSize(R.dimen.folder_available_icon_height);
+            float topMarginY = (mAvailableSpaceInPreview - mAvailableSpaceInFolderIcon) / 2 + iconTopToFolderHeight;
+            int column = index % NUM_COLUMN_IN_PREVIEW;
+            int row = index / NUM_COLUMN_IN_PREVIEW;
+            transX = leftMargin + scaledSize * column + itemPadding * column + 4;
+            transY = topMarginY + scaledSize * row + itemPadding * row;
+            totalScale = scale;
+            overlayAlpha = 0;
+        }
+        //Modify BUG_ID:none zhaopenglin 20150601(end)
 
         if (params == null) {
             params = new PreviewItemDrawingParams(transX, transY, totalScale, overlayAlpha);
@@ -648,9 +723,13 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         if (mAnimating) {
             computePreviewDrawingParams(mAnimParams.drawable);
         } else {
-            v = (TextView) items.get(0);
-            d = getTopDrawable(v);
-            computePreviewDrawingParams(d);
+            try {
+                v = (TextView) items.get(0);
+                d = getTopDrawable(v);
+                computePreviewDrawingParams(d);
+            } catch (Exception e) {
+                Log.e("Launcher:FolderIcon", "e = " + e);
+            }
         }
 
         int nItemsInPreview = Math.min(items.size(), NUM_ITEMS_IN_PREVIEW);
@@ -678,17 +757,18 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     private void animateFirstItem(final Drawable d, int duration, final boolean reverse,
-            final Runnable onCompleteRunnable) {
+                                  final Runnable onCompleteRunnable) {
+        Log.i("Launcher:FolderIcon", "animateFirstItem");
         final PreviewItemDrawingParams finalParams = computePreviewItemDrawingParams(0, null);
 
         float iconSize = mLauncher.getDeviceProfile().iconSizePx;
-        final float scale0 = iconSize / d.getIntrinsicWidth() ;
+        final float scale0 = iconSize / d.getIntrinsicWidth();
         final float transX0 = (mAvailableSpaceInPreview - iconSize) / 2;
         final float transY0 = (mAvailableSpaceInPreview - iconSize) / 2 + getPaddingTop();
         mAnimParams.drawable = d;
 
         ValueAnimator va = LauncherAnimUtils.ofFloat(this, 0f, 1.0f);
-        va.addUpdateListener(new AnimatorUpdateListener(){
+        va.addUpdateListener(new AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator animation) {
                 float progress = (Float) animation.getAnimatedValue();
                 if (reverse) {
@@ -699,6 +779,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
                 mAnimParams.transX = transX0 + progress * (finalParams.transX - transX0);
                 mAnimParams.transY = transY0 + progress * (finalParams.transY - transY0);
                 mAnimParams.scale = scale0 + progress * (finalParams.scale - scale0);
+                Log.i("Launcher:FolderIcon", "addUpdateListener1 " + mInfo.title);
                 invalidate();
             }
         });
@@ -707,6 +788,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
             public void onAnimationStart(Animator animation) {
                 mAnimating = true;
             }
+
             @Override
             public void onAnimationEnd(Animator animation) {
                 mAnimating = false;
@@ -720,6 +802,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     public void setTextVisible(boolean visible) {
+        Log.i("Launcher:FolderIcon", "setTextVisible");
         if (visible) {
             mFolderName.setVisibility(VISIBLE);
         } else {
@@ -732,19 +815,17 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     public void onItemsChanged() {
+        Log.i("Launcher:FolderIcon", "onItemsChanged");
         invalidate();
         requestLayout();
     }
 
     public void onAdd(ShortcutInfo item) {
-        if (LauncherLog.DEBUG) {
-            LauncherLog.d(TAG, "onAdd item = " + item);
-        }
-
         /**
          * M: added for unread feature, when add a item to a folder, we need to update
          * the unread num of the folder.@{
          */
+        Log.i("Launcher:FolderIcon", "onAdd");
         final ComponentName componentName = item.intent.getComponent();
         updateFolderUnreadNum(componentName, item.unreadNum);
         /**@}**/
@@ -754,13 +835,11 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     public void onRemove(ShortcutInfo item) {
-        if (LauncherLog.DEBUG) {
-            LauncherLog.d(TAG, "onRemove item = " + item);
-        }
 
         /**M: added for Unread feature, when remove a item from a folder, we need to update
          *  the unread num of the folder.@{
          */
+        Log.i("Launcher:FolderIcon", "onRemove");
         final ComponentName componentName = item.intent.getComponent();
         updateFolderUnreadNum(componentName, item.unreadNum);
         /**@}**/
@@ -770,6 +849,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     public void onTitleChanged(CharSequence title) {
+        Log.i("Launcher:FolderIcon", "onTitleChanged");
         mFolderName.setText(title);
         setContentDescription(String.format(getContext().getString(R.string.folder_name_format),
                 title));
@@ -777,6 +857,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        Log.i("Launcher:FolderIcon", "onTouchEvent");
         // Call the superclass onTouchEvent first, because sometimes it changes the state to
         // isPressed() on an ACTION_UP
         boolean result = super.onTouchEvent(event);
@@ -806,6 +887,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
 
     @Override
     protected void onAttachedToWindow() {
+        Log.i("Launcher:FolderIcon", "onAttachedToWindow");
         super.onAttachedToWindow();
         mSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     }
@@ -814,108 +896,93 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     public void cancelLongPress() {
         super.cancelLongPress();
 
+        Log.i("Launcher:FolderIcon", "cancelLongPress");
         mLongPressHelper.cancelLongPress();
     }
 
     /**M: Added for unread message feature.@{**/
 
-   /**
-    * M: Update the unread message number of the shortcut with the given value.
-    *
-    * @param unreadNum the number of the unread message.
-    */
-   public void setFolderUnreadNum(int unreadNum) {
-       if (LauncherLog.DEBUG_UNREAD) {
-           LauncherLog.d(TAG, "setFolderUnreadNum: unreadNum = " + unreadNum + ", mInfo = " + mInfo
-                   + ", this = " + this);
-       }
+    /**
+     * M: Update the unread message number of the shortcut with the given value.
+     *
+     * @param unreadNum the number of the unread message.
+     */
+    public void setFolderUnreadNum(int unreadNum) {
 
-       if (unreadNum <= 0) {
-           mInfo.unreadNum = 0;
-       } else {
-           mInfo.unreadNum = unreadNum;
-       }
-   }
+        Log.i("Launcher:FolderIcon", "setFolderUnreadNum");
+        if (unreadNum <= 0) {
+            mInfo.unreadNum = 0;
+        } else {
+            mInfo.unreadNum = unreadNum;
+        }
+    }
 
-   /**
-    * M: Update unread number of the folder, the number is the total unread number
-    * of all shortcuts in folder, duplicate shortcut will be only count once.
-    */
-   public void updateFolderUnreadNum() {
-       final ArrayList<ShortcutInfo> contents = mInfo.contents;
-       final int contentsCount = contents.size();
-       int unreadNumTotal = 0;
-       final ArrayList<ComponentName> components = new ArrayList<ComponentName>();
-       ShortcutInfo shortcutInfo = null;
-       ComponentName componentName = null;
-       int unreadNum = 0;
-       for (int i = 0; i < contentsCount; i++) {
-           shortcutInfo = contents.get(i);
-           componentName = shortcutInfo.intent.getComponent();
-           unreadNum = MTKUnreadLoader.getUnreadNumberOfComponent(componentName);
-           if (unreadNum > 0) {
-               shortcutInfo.unreadNum = unreadNum;
-               int j = 0;
-               for (j = 0; j < components.size(); j++) {
-                   if (componentName != null && componentName.equals(components.get(j))) {
-                       break;
-                   }
-               }
-               if (LauncherLog.DEBUG_UNREAD) {
-                   LauncherLog.d(TAG, "updateFolderUnreadNum: unreadNumTotal = " + unreadNumTotal
-                           + ", j = " + j + ", components.size() = " + components.size());
-               }
-               if (j >= components.size()) {
-                   components.add(componentName);
-                   unreadNumTotal += unreadNum;
-               }
-           }
-       }
-       if (LauncherLog.DEBUG_UNREAD) {
-           LauncherLog.d(TAG, "updateFolderUnreadNum 1 end: unreadNumTotal = " + unreadNumTotal);
-       }
-       setFolderUnreadNum(unreadNumTotal);
-   }
+    /**
+     * M: Update unread number of the folder, the number is the total unread number
+     * of all shortcuts in folder, duplicate shortcut will be only count once.
+     */
+    public void updateFolderUnreadNum() {
+        final ArrayList<ShortcutInfo> contents = mInfo.contents;
+        final int contentsCount = contents.size();
+        int unreadNumTotal = 0;
+        final ArrayList<ComponentName> components = new ArrayList<ComponentName>();
+        ShortcutInfo shortcutInfo = null;
+        ComponentName componentName = null;
+        int unreadNum = 0;
+        for (int i = 0; i < contentsCount; i++) {
+            shortcutInfo = contents.get(i);
+            componentName = shortcutInfo.intent.getComponent();
+            //unreadNum = MTKUnreadLoader.getUnreadNumberOfComponent(componentName);
+            if (unreadNum > 0) {
+                shortcutInfo.unreadNum = unreadNum;
+                int j = 0;
+                for (j = 0; j < components.size(); j++) {
+                    if (componentName != null && componentName.equals(components.get(j))) {
+                        break;
+                    }
+                }
+                if (j >= components.size()) {
+                    components.add(componentName);
+                    unreadNumTotal += unreadNum;
+                }
+            }
+        }
+        setFolderUnreadNum(unreadNumTotal);
+    }
 
-   /**
-    * M: Update the unread message of the shortcut with the given information.
-    *
-    * @param unreadNum the number of the unread message.
-    */
-   public void updateFolderUnreadNum(ComponentName component, int unreadNum) {
-       final ArrayList<ShortcutInfo> contents = mInfo.contents;
-       final int contentsCount = contents.size();
-       int unreadNumTotal = 0;
-       ShortcutInfo appInfo = null;
-       ComponentName name = null;
-       final ArrayList<ComponentName> components = new ArrayList<ComponentName>();
-       for (int i = 0; i < contentsCount; i++) {
-           appInfo = contents.get(i);
-           name = appInfo.intent.getComponent();
-           if (name != null && name.equals(component)) {
-               appInfo.unreadNum = unreadNum;
-           }
-           if (appInfo.unreadNum > 0) {
-               int j = 0;
-               for (j = 0; j < components.size(); j++) {
-                   if (name != null && name.equals(components.get(j))) {
-                       break;
-                   }
-               }
-               if (LauncherLog.DEBUG_UNREAD) {
-                   LauncherLog.d(TAG, "updateFolderUnreadNum: unreadNumTotal = " + unreadNumTotal
-                           + ", j = " + j + ", components.size() = " + components.size());
-               }
-               if (j >= components.size()) {
-                   components.add(name);
-                   unreadNumTotal += appInfo.unreadNum;
-               }
-           }
-       }
-       if (LauncherLog.DEBUG_UNREAD) {
-           LauncherLog.d(TAG, "updateFolderUnreadNum 2 end: unreadNumTotal = " + unreadNumTotal);
-       }
-       setFolderUnreadNum(unreadNumTotal);
-   }
-   /**@**/
+    /**
+     * M: Update the unread message of the shortcut with the given information.
+     *
+     * @param unreadNum the number of the unread message.
+     */
+    public void updateFolderUnreadNum(ComponentName component, int unreadNum) {
+        Log.i("Launcher:FolderIcon", "updateFolderUnreadNum");
+        final ArrayList<ShortcutInfo> contents = mInfo.contents;
+        final int contentsCount = contents.size();
+        int unreadNumTotal = 0;
+        ShortcutInfo appInfo = null;
+        ComponentName name = null;
+        final ArrayList<ComponentName> components = new ArrayList<ComponentName>();
+        for (int i = 0; i < contentsCount; i++) {
+            appInfo = contents.get(i);
+            name = appInfo.intent.getComponent();
+            if (name != null && name.equals(component)) {
+                appInfo.unreadNum = unreadNum;
+            }
+            if (appInfo.unreadNum > 0) {
+                int j = 0;
+                for (j = 0; j < components.size(); j++) {
+                    if (name != null && name.equals(components.get(j))) {
+                        break;
+                    }
+                }
+                if (j >= components.size()) {
+                    components.add(name);
+                    unreadNumTotal += appInfo.unreadNum;
+                }
+            }
+        }
+        setFolderUnreadNum(unreadNumTotal);
+    }
+    /**@**/
 }

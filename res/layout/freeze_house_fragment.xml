@@ -1,0 +1,18 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="22dp"
+    android:background="@drawable/fp_freeze_bg" >
+
+    <GridView
+        android:id="@+id/myGrid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="3"
+        android:gravity="center"
+        android:horizontalSpacing="1dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="1dp" />
+
+</RelativeLayout>

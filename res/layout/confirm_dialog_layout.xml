@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="0dip"
+    android:paddingLeft="0dip"
+    android:paddingRight="0dip"
+    android:paddingTop="0dip" >
+
+    <TextView
+        android:id="@+id/dialog_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:textColor="#000000"
+        android:textSize="16sp" />
+
+    <View
+        android:id="@+id/divider_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/line_in_dialog" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/dialog_cancel"
+            android:layout_width="0px"
+            android:layout_height="40dip"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/dialog_left_btn_bg"
+            android:gravity="center"
+            android:text="@android:string/cancel"
+            android:textColor="#35A69A"
+            android:textSize="13sp" />
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="40dp"
+            android:background="@drawable/line_in_dialog" />
+
+        <Button
+            android:id="@+id/dialog_ok"
+            android:layout_width="0px"
+            android:layout_height="40dip"
+            android:layout_margin="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/dialog_right_btn_bg"
+            android:gravity="center"
+            android:text="@android:string/ok"
+            android:textColor="#35A69A"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+</LinearLayout>

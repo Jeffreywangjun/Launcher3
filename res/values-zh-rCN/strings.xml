@@ -126,4 +126,15 @@
     <string name="wifi_off">无线网已经关闭</string>
     <string name="bluetooth_on">蓝牙已经开启</string>
     <string name="bluetooth_off">蓝牙已经关闭</string>
+
+    <!--Freeze start-->
+    <string name="freeze">冷冻应用</string>
+
+    <string name="app_freeze_dialog_message">是否冻结 %1$s 应用?</string>
+    <string name="app_unfreeze_dialog_message">是否解冻 %1$s 应用?</string>
+    <string name="toast_app_freeze_success">%1$s 冻结成功</string>
+    <string name="toast_app_unfreeze_success">%1$s 解冻成功</string>
+
+    <string name="naming_error">此文件夹已存在,请重新命名</string>
+    <!--Freeze end-->
 </resources>
