@@ -126,6 +126,10 @@
     <string name="wifi_off">无线网已经关闭</string>
     <string name="bluetooth_on">蓝牙已经开启</string>
     <string name="bluetooth_off">蓝牙已经关闭</string>
+    <!--SingleMode start-->
+    <string name="SingleMode_button_text">单层结构</string>
+    <string name="SingleMode_switch_text">单层结构</string>
+    <!--SingleMode end-->
 
     <!--Freeze start-->
     <string name="freeze">冷冻应用</string>

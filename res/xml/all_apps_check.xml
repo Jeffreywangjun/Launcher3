@@ -5,7 +5,7 @@
 
     <SwitchPreference
         android:key="pref_allowSingleMode"
-        android:title="单层结构"
+        android:title="@string/SingleMode_switch_text"
         android:defaultValue="@bool/allow_rotation"
         android:persistent="true"
         />
