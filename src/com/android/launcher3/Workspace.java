@@ -1818,7 +1818,12 @@ int NavigationBar_H= getNavigationBarHeight();//add by lihuachun
             LauncherLog.d(TAG, "onAttachedToWindow: mWindowToken = " + mWindowToken);
         }
         computeScroll();
-        mDragController.setWindowToken(mWindowToken);
+        try {
+            mDragController.setWindowToken(mWindowToken);
+        }
+        catch (NullPointerException e){
+            
+        }
     }
 
     protected void onDetachedFromWindow() {

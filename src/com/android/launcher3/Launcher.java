@@ -132,7 +132,9 @@ import com.android.launcher3.widget.WidgetHostViewLoader;
 import com.android.launcher3.widget.WidgetsContainerView;
 
 import com.mediatek.launcher3.ext.LauncherLog;
+
 import android.Manifest;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
@@ -152,6 +154,7 @@ import com.android.launcher3.preview.RGKPreference;
 import com.android.launcher3.preview.RGKPreviewConfigure;
 import com.android.launcher3.preview.RGKPreviewItemInfo;
 import com.android.launcher3.preview.RGKWorkspacePreviewScrollLayout;
+
 /**
  * Default launcher application.
  */
@@ -241,8 +244,10 @@ public class Launcher extends Activity
     /**
      * The different states that Launcher can be in.
      */
-    enum State { NONE, WORKSPACE, APPS, APPS_SPRING_LOADED, WIDGETS, WIDGETS_SPRING_LOADED ,
-        WORKSPACE_PREVIEW }    // Add by yeyu for screen edit 20160910
+    enum State {
+        NONE, WORKSPACE, APPS, APPS_SPRING_LOADED, WIDGETS, WIDGETS_SPRING_LOADED,
+        WORKSPACE_PREVIEW
+    }    // Add by yeyu for screen edit 20160910
 
     @Thunk
     State mState = State.WORKSPACE;
@@ -301,10 +306,11 @@ public class Launcher extends Activity
     private View mAllAppsButton;
     private View mWidgetsButton;
     private View t9View; //Add by zhaopenglin for t9 20160920
-private View t9View_left; //Add by lihuachun for t9 20161021
+    private View t9View_left; //Add by lihuachun for t9 20161021
     RelativeLayout mCustomView;
+    private static boolean mPermissionReqProcessed = false;
     private SearchDropTargetBar mSearchDropTargetBar;
-
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
     // Main container view for the all apps screen.
     @Thunk
     AllAppsContainerView mAppsView;
@@ -338,7 +344,7 @@ private View t9View_left; //Add by lihuachun for t9 20161021
     private ArrayList<Runnable> mOnResumeCallbacks = new ArrayList<Runnable>();
 
     private Bundle mSavedInstanceState;
-
+    private Bundle mmSavedInstanceState;
     public static LauncherModel mModel;
     private IconCache mIconCache;
     @Thunk
@@ -541,7 +547,54 @@ private View t9View_left; //Add by lihuachun for t9 20161021
         }
 
         super.onCreate(savedInstanceState);
+        mmSavedInstanceState = savedInstanceState;//lihuachun
+        if (getApplicationContext().checkSelfPermission(
+               Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+               ) {
+            requestMusicPermissions();
+            mPermissionReqProcessed = false;
+       } else {
+            //onCreateContinue(mSavedInstanceState);
+             mPermissionReqProcessed = true;
+           onCreateContinue(mmSavedInstanceState);
+          
+     }
 
+    }
+
+    private void requestMusicPermissions() {
+//        this.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//            REQUEST_EXTERNAL_STORAGE);
+//        this.requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},
+//            REQUEST_EXTERNAL_STORAGE);
+//        this.requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE},
+//            REQUEST_EXTERNAL_STORAGE);
+//        this.requestPermissions(new String[]{Manifest.permission.READ_CALENDAR},
+//            REQUEST_EXTERNAL_STORAGE);
+        this.requestPermissions(new String[]{
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        }, REQUEST_EXTERNAL_STORAGE);
+    }
+
+    public void onCreateContinue(Bundle savedInstanceState) {
+        if (DEBUG_STRICT_MODE) {
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                    .detectDiskReads()
+                    .detectDiskWrites()
+                    .detectNetwork()   // or .detectAll() for all detectable problems
+                    .penaltyLog()
+                    .build());
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects()
+                    .penaltyLog()
+                    .penaltyDeath()
+                    .build());
+        }
+
+        if (mLauncherCallbacks != null) {
+            mLauncherCallbacks.preOnCreate();
+        }
         /*Intent intent = new Intent(Launcher.this, RgkSateLiteService.class);*/
         mSwipeApplication = (RgkApplication) getApplication();
         //rgkSateLiteModel=mSwipeApplication.set
@@ -623,8 +676,8 @@ private View t9View_left; //Add by lihuachun for t9 20161021
 
         lockAllApps();
 
-        mSavedState = savedInstanceState;
-
+        mSavedState = savedInstanceState;//lihuachun
+        //   mSavedState=mmSavedInstanceState;
         restoreState(mSavedState);
 
         if (PROFILE_STARTUP) {
@@ -681,6 +734,7 @@ private View t9View_left; //Add by lihuachun for t9 20161021
 
 
     }
+
     @Override
     public void onSettingsChanged(String settings, boolean value) {
         if (Utilities.ALLOW_ROTATION_PREFERENCE_KEY.equals(settings)) {
@@ -765,7 +819,7 @@ private View t9View_left; //Add by lihuachun for t9 20161021
      * To be overridden by subclasses to hint to Launcher that we have custom content
      */
     protected boolean hasCustomContentToLeft() {
-      return false;
+        return true;
     }
 
     /**
@@ -777,30 +831,31 @@ private View t9View_left; //Add by lihuachun for t9 20161021
 
 
         try {
-        	
 
-        mCustomView = (RelativeLayout) getLayoutInflater().inflate(R.layout.activity_splash, null);
-        	// t9View_left =getLayoutInflater().inflate(R.layout.activity_main, null);
-		// AppInfoHelper.getInstance().setBaseAllAppInfos(LauncherModel.allAddAppItems);
-	
-		
-        	
-        	
+            if (mCustomView == null) {
+                mCustomView = (RelativeLayout) getLayoutInflater().inflate(R.layout.activity_splash, null);
+                // t9View_left =getLayoutInflater().inflate(R.layout.activity_main, null);
+                // AppInfoHelper.getInstance().setBaseAllAppInfos(LauncherModel.allAddAppItems);
+
+            }
+
+
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
-       // addCustomContentToLeft(t9View_left);
+        // addCustomContentToLeft(t9View_left);
         addCustomContentToLeft(mCustomView);
     }
-public void addCustomContentToLeft(final View customView) {
+
+    public void addCustomContentToLeft(final View customView) {
 
 
         CustomContentCallbacks callbacks = new CustomContentCallbacks() {
 
             @Override
             public void onScrollProgressChanged(float progress) {
-               // CommonsUtils.hideKeyboard(LeftyActivity.this);
+                // CommonsUtils.hideKeyboard(LeftyActivity.this);
             }
 
             @Override
@@ -813,12 +868,14 @@ public void addCustomContentToLeft(final View customView) {
             }
 
             @Override
-            public void onHide() {}
+            public void onHide() {
+            }
         };
 
 
         addToCustomContentPage(customView, callbacks, "custom view");
     }
+
     /**
      * Invoked by subclasses to signal a change to the {@link #addCustomContentToLeft} value to
      * ensure the custom content page is added or removed if necessary.
@@ -1089,6 +1146,25 @@ public void addCustomContentToLeft(final View customView) {
             mLauncherCallbacks.onRequestPermissionsResult(requestCode, permissions,
                     grantResults);
         }
+        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+            // If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                // permission was granted, yay! Do the
+                // Storage-related task you need to do.
+               mPermissionReqProcessed = true;
+               onCreateContinue(mmSavedInstanceState);
+                onResumeContinue();
+            } else {
+
+                // permission denied, boo! Disable the
+                // functionality that depends on this permission.
+                finish();
+                Toast.makeText(this, "RLauncher Exit !!!!!!", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
     }
 
     private PendingAddArguments preparePendingAddArgs(int requestCode, Intent data, int
@@ -1198,7 +1274,7 @@ public void addCustomContentToLeft(final View customView) {
 
     @Override
     protected void onResume() {
-        Log.d("LAUNCHERMODEL","onResume");
+        Log.d("LAUNCHERMODEL", "onResume");
         long startTime = 0;
         if (DEBUG_RESUME_TIME) {
             startTime = System.currentTimeMillis();
@@ -1210,6 +1286,14 @@ public void addCustomContentToLeft(final View customView) {
         }
 
         super.onResume();
+        if (mPermissionReqProcessed) {
+        //if (true) {
+            onResumeContinue();
+        }
+    }
+
+    public void onResumeContinue() {
+
         if (LauncherLog.DEBUG) {
             LauncherLog.d(TAG, "(Launcher)onResume: mRestoring = " + mRestoring
                     + ", mOnResumeNeedsLoad = " + mOnResumeNeedsLoad + ",mOrientationChanged = "
@@ -1284,11 +1368,13 @@ public void addCustomContentToLeft(final View customView) {
         // Consequently, the widgets will be inflated in the orientation of the foreground activity
         // (framework issue). On resuming, we ensure that any widgets are inflated for the current
         // orientation.
-        getWorkspace().reinflateWidgetsIfNecessary();
+        if (getWorkspace() != null) {
+            getWorkspace().reinflateWidgetsIfNecessary();
+        }
         reinflateQSBIfNecessary();
 
         if (DEBUG_RESUME_TIME) {
-            Log.d(TAG, "Time spent in onResume: " + (System.currentTimeMillis() - startTime));
+            //  Log.d(TAG, "Time spent in onResume: " + (System.currentTimeMillis() - startTime));
         }
 
         if (mWorkspace.getCustomContentCallbacks() != null) {
@@ -1315,6 +1401,7 @@ public void addCustomContentToLeft(final View customView) {
             mLauncherCallbacks.onResume();
         }
     }
+
     @Override
     protected void onPause() {
 
@@ -1328,14 +1415,28 @@ public void addCustomContentToLeft(final View customView) {
         }
 
         mPaused = true;
-        mDragController.cancelDrag();
-        mDragController.resetLastGestureUpTime();
+
+try {
+    mDragController.cancelDrag();
+    mDragController.resetLastGestureUpTime();
+}
+catch (NullPointerException e){
+    
+
+}
 
         // We call onHide() aggressively. The custom content callbacks should be able to
         // debounce excess onHide calls.
-        if (mWorkspace.getCustomContentCallbacks() != null) {
-            mWorkspace.getCustomContentCallbacks().onHide();
-        }
+try {
+    if (mWorkspace.getCustomContentCallbacks() != null) {
+        mWorkspace.getCustomContentCallbacks().onHide();
+    }
+}
+catch (NullPointerException e)
+{
+    
+}
+
         // Add by yeyu for screen edit 20160910 start
         if (isWorkspacePreviewMode() && RGKPreviewConfigure.isMove) {
             mWorkspacePreview.cancelDrag();
@@ -1463,7 +1564,7 @@ public void addCustomContentToLeft(final View customView) {
 
     public void addToCustomContentPage(View customContent,
                                        CustomContentCallbacks callbacks, String description) {
-       
+
         mWorkspace.addToCustomContentPage(customContent, callbacks, description);
     }
 
@@ -1542,9 +1643,15 @@ public void addCustomContentToLeft(final View customView) {
     }
 
     private void clearTypedText() {
-        mDefaultKeySsb.clear();
-        mDefaultKeySsb.clearSpans();
-        Selection.setSelection(mDefaultKeySsb, 0);
+        try {
+            mDefaultKeySsb.clear();
+            mDefaultKeySsb.clearSpans();
+            Selection.setSelection(mDefaultKeySsb, 0);
+        }
+        catch(NullPointerException e){
+
+
+        }
     }
 
     /**
@@ -1758,7 +1865,7 @@ public void addCustomContentToLeft(final View customView) {
     }
 
     private void onClickSinglemodeButton(View v) {
-            startActivity(new Intent(this, SinglemodeActivity.class));
+        startActivity(new Intent(this, SinglemodeActivity.class));
     }
 
     /**
@@ -2296,7 +2403,7 @@ public void addCustomContentToLeft(final View customView) {
             Log.d(TAG, "Time spent in onNewIntent: " + (System.currentTimeMillis() - startTime));
         }
     }
-    
+
 
     @Override
     public void onRestoreInstanceState(Bundle state) {
@@ -2312,12 +2419,19 @@ public void addCustomContentToLeft(final View customView) {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (mWorkspace.getChildCount() > 0) {
-            outState.putInt(RUNTIME_STATE_CURRENT_SCREEN,
-                    mWorkspace.getCurrentPageOffsetFromCustomContent());
-        } else { /// M: If workspcae no initialized, use saved last restore workspace screen.
-            outState.putInt(RUNTIME_STATE_CURRENT_SCREEN, mCurrentWorkSpaceScreen);
-        }
+try {
+    if (mWorkspace.getChildCount() > 0) {
+        outState.putInt(RUNTIME_STATE_CURRENT_SCREEN,
+                mWorkspace.getCurrentPageOffsetFromCustomContent());
+    } else { /// M: If workspcae no initialized, use saved last restore workspace screen.
+        outState.putInt(RUNTIME_STATE_CURRENT_SCREEN, mCurrentWorkSpaceScreen);
+    }
+}
+catch (NullPointerException e)
+{
+
+
+}
         super.onSaveInstanceState(outState);
 
         outState.putInt(RUNTIME_STATE, mState.ordinal());
@@ -2814,13 +2928,15 @@ public void addCustomContentToLeft(final View customView) {
 
         return super.dispatchKeyEvent(event);
     }
+
     //Add by zhaopenglin for t9 20160920 start
-    private void exitT9View(){
-        if(t9View != null && t9View.getVisibility() == View.VISIBLE){
+    private void exitT9View() {
+        if (t9View != null && t9View.getVisibility() == View.VISIBLE) {
             t9View.setVisibility(View.INVISIBLE);
             showWorkspaceSearchAndHotseat();
         }
     }
+
     //Add by zhaopenglin for t9 20160920 end
     @Override
     public void onBackPressed() {
@@ -2933,7 +3049,7 @@ public void addCustomContentToLeft(final View customView) {
         if (v instanceof CellLayout) {
             if (mWorkspace.isInOverviewMode()) {
                 showWorkspace(mWorkspace.indexOfChild(v), true);
-            }else doubleclick();//add by zhaopenglin for double click launch t9
+            } else doubleclick();//add by zhaopenglin for double click launch t9
         }
 
         Object tag = v.getTag();
@@ -2955,24 +3071,26 @@ public void addCustomContentToLeft(final View customView) {
         /// M: add systrace to analyze application launche time.
         // Trace.traceEnd(Trace.TRACE_TAG_INPUT);  // wangjun delete ---__JEF_COMPILE_PASS__
     }
+
     //add by zhaopenglin for double click launch t9 start
     private int count = 0;
     private long firstClick = 0;
 
     private void doubleclick() {
         long temp = System.currentTimeMillis();
-        if(temp - firstClick > 300){
+        if (temp - firstClick > 300) {
             firstClick = temp;
             count = 1;
-        }else {
+        } else {
             count++;
-            if(2 == count) {
+            if (2 == count) {
                 hideWorkspaceSearchAndHotseat();
                 t9View.setVisibility(View.VISIBLE);
                 AppInfoHelper.getInstance().setBaseAllAppInfos(LauncherModel.allAddAppItems);
             }
         }
     }
+
     //add by zhaopenglin for double click launch t9 end
     @SuppressLint("ClickableViewAccessibility")
     public boolean onTouch(View v, MotionEvent event) {
@@ -3180,9 +3298,9 @@ public void addCustomContentToLeft(final View customView) {
 
         if (!info.opened && !folderIcon.getFolder().isDestroyed()) {
             //M: taoqi 20160927(start) start FreezeActivity when click "Freeze" folder
-            if(info.title.equals("Freeze")){
+            if (info.title.equals("Freeze")) {
                 startActivity(new Intent(this, FreezeActivity.class));
-            }else {//normal Open
+            } else {//normal Open
                 // Close any open folder
                 closeFolder();
                 // Open the requested folder
@@ -4517,6 +4635,7 @@ public void addCustomContentToLeft(final View customView) {
      * Implementation of the method from LauncherModel.Callbacks.
      */
     public static FolderInfo freeze;//A: taoqi
+
     public void bindFolders(final LongArrayMap<FolderInfo> folders) {
         freeze = folders.get(1);//A: taoqi
         if (LauncherLog.DEBUG) {
@@ -4757,7 +4876,7 @@ public void addCustomContentToLeft(final View customView) {
     }
 
     public boolean isAllAppsButtonRank(int rank) {
-        if(!LauncherAppState.isDisableAllApps()){
+        if (!LauncherAppState.isDisableAllApps()) {
             if (mHotseat != null) {
                 return mHotseat.isAllAppsButtonRank(rank);
             }
@@ -5595,7 +5714,8 @@ public void addCustomContentToLeft(final View customView) {
         }
         return false;
     }
-	    // Add by yeyu for screen edit 20160910 start
+
+    // Add by yeyu for screen edit 20160910 start
     public boolean isPreviewStates() {
         return mState == State.WORKSPACE_PREVIEW;
     }
@@ -5645,9 +5765,8 @@ public void addCustomContentToLeft(final View customView) {
         }
 
 
-
         // Add @{
-        DeviceProfile prof =mDeviceProfile;
+        DeviceProfile prof = mDeviceProfile;
         bitmapWidth = prof.previewWidth;
         bitmapHeight = prof.previewHeight;
         float scaleW = prof.previewScale;
@@ -6147,7 +6266,7 @@ public void addCustomContentToLeft(final View customView) {
                                 mWorkspace.setCurrentPage(listData.get(idx - 1).getIndex());
                             }
                         }
-Log.i("zhaoedit","idx:"+idx);
+                        Log.i("zhaoedit", "idx:" + idx);
                         deletePreviewScreen(idx);
                     }
                 }
