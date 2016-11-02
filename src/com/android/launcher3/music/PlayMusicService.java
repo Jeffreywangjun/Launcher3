@@ -22,6 +22,8 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
+import android.widget.Toast;
+
 import com.android.launcher3.R;
 public class PlayMusicService extends Service implements Runnable {
 
@@ -113,12 +115,25 @@ public class PlayMusicService extends Service implements Runnable {
 					if (last_song >= musiclist.size() - 1) {
 						last_song = (musiclist.size() - 1);
 					}
-					Log.d("progress", "�ϴεĽ����ǣ�" + String.valueOf(progress));
-					playMusic(last_song);
-					mPlayer.seekTo(progress);
+					Log.d("progress", "" + String.valueOf(progress));
+					Log.e("last_song", "last_song" + last_song);
+try {
+	playMusic(last_song);
+
+
+
+					mPlayer.seekTo(progress);}
+					catch (Exception e){
+
+
+					}
 				}
 				playflag = true;
-				widgetplay();
+				try {
+				widgetplay();}
+				catch (Exception e){
+					Toast.makeText(this,"本地没歌曲！！！",Toast.LENGTH_LONG).show();
+				}
 			}
 		} else if (1 == mode) {
 			last_song = (last_song + 1);
@@ -140,13 +155,25 @@ public class PlayMusicService extends Service implements Runnable {
 
 	private void playMusic(int song) {
 		if (null != mPlayer) {
-			mPlayer.release();
+			try {
+				mPlayer.release();
+			}
+			catch (ArrayIndexOutOfBoundsException e){
+				
+
+			}
+
 			mPlayer = null;
 		}
 
-		Music m = musiclist.get(song);
+	Music m = musiclist.get(song);
+
 		Intent intent = new Intent("com.example.musicserviceplayer");
 		sendBroadcast(intent);
+		if(song==-1){
+			stopService(intent);
+			Toast.makeText(this,"stop",Toast.LENGTH_LONG).show();
+		}
 		String url = m.getUrl();
 		Uri myUri = Uri.parse(url);
 		mPlayer = new MediaPlayer();
@@ -238,7 +265,9 @@ public class PlayMusicService extends Service implements Runnable {
 	private void widgetplay() {
 		RemoteViews remoteViews = new RemoteViews(this.getPackageName(),
 				R.layout.music_appwidget);
+
 		Music m = musiclist.get(last_song);
+
 		Map<String, String> paramsui = service.getPreferencesback();
 		Uri uri = Uri.parse(paramsui.get("background"));
 		ContentResolver contentResolver = this.getContentResolver();
