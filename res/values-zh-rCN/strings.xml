@@ -132,7 +132,6 @@
     <!--SingleMode end-->
 
     <!--Freeze start-->
-    <string name="freeze">冷冻应用</string>
 
     <string name="app_freeze_dialog_message">是否冻结 %1$s 应用?</string>
     <string name="app_unfreeze_dialog_message">是否解冻 %1$s 应用?</string>
