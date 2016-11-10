@@ -548,18 +548,26 @@ public class Launcher extends Activity
 
         super.onCreate(savedInstanceState);
         mmSavedInstanceState = savedInstanceState;//lihuachun
-        if (getApplicationContext().checkSelfPermission(
-               Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-               ) {
-            requestMusicPermissions();
-            mPermissionReqProcessed = false;
-       } else {
-            //onCreateContinue(mSavedInstanceState);
-             mPermissionReqProcessed = true;
-           onCreateContinue(mmSavedInstanceState);
-          
-     }
+        int version = android.os.Build.VERSION.SDK_INT;
+        if(version>=23) {
+            if (getApplicationContext().checkSelfPermission(
+                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                    ) {
 
+                requestMusicPermissions();
+                mPermissionReqProcessed = false;
+            } else {
+                //onCreateContinue(mSavedInstanceState);
+                mPermissionReqProcessed = true;
+                onCreateContinue(mmSavedInstanceState);
+
+            }
+        }else{
+
+            //onCreateContinue(mSavedInstanceState);
+            mPermissionReqProcessed = true;
+            onCreateContinue(mmSavedInstanceState);
+        }
     }
 
     private void requestMusicPermissions() {
