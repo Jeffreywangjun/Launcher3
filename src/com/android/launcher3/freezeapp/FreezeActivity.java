@@ -252,7 +252,6 @@ public class FreezeActivity extends BaseActivity implements IFreezeView {
             app = new AppInfo();
             app.applicationInfo = appInfo;
             app.title = appInfo.loadLabel(this.getPackageManager());
-//            app.iconDrawable = appInfo.loadIcon(this.getPackageManager());
             presenter.addFreezeApp(app);
         }
     }

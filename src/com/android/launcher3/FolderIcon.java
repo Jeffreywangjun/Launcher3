@@ -194,6 +194,11 @@ public class FolderIcon extends FrameLayout implements FolderListener {
 
         // Offset the preview background to center this view accordingly
         icon.mPreviewBackground = (ImageView) icon.findViewById(R.id.preview_background);
+        //A: taoqi  modify Freeeze-folder background (start)
+        if(folderInfo.title.equals("Freeze")){
+            icon.mPreviewBackground.setImageDrawable(launcher.getResources().getDrawable(R.drawable.fp_freeze_bg));
+        }
+        //A: taoqi  modify Freeeze-folder background (end)
         lp = (FrameLayout.LayoutParams) icon.mPreviewBackground.getLayoutParams();
         lp.topMargin = grid.folderBackgroundOffset;
         lp.width = grid.folderIconSizePx;

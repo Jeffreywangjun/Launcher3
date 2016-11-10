@@ -756,6 +756,7 @@ public class Launcher extends Activity
 
     public boolean setLauncherCallbacks(LauncherCallbacks callbacks) {
         mLauncherCallbacks = callbacks;
+        Log.i("ssss","chu shi hua mLauncherCallbacks");
         mLauncherCallbacks.setLauncherSearchCallback(new Launcher.LauncherSearchCallbacks() {
             private boolean mWorkspaceImportanceStored = false;
             private boolean mHotseatImportanceStored = false;
@@ -1320,6 +1321,7 @@ public class Launcher extends Activity
         setWorkspaceBackground(mState == State.WORKSPACE ? WORKSPACE_BACKGROUND_GRADIENT
                 : WORKSPACE_BACKGROUND_TRANSPARENT);
 
+        Log.i("ssss","continueResume");
         mPaused = false;
         if (mRestoring || mOnResumeNeedsLoad) {
             setWorkspaceLoading(true);
@@ -4928,6 +4930,7 @@ catch (NullPointerException e)
     ArrayList<AppInfo> mTmpAppsList;
     private Runnable mBindAllApplicationsRunnable = new Runnable() {
         public void run() {
+            Log.i("ssss","mTmpAppsList = "+mTmpAppsList);
             bindAllApplications(mTmpAppsList);
             mTmpAppsList = null;
         }
@@ -4944,14 +4947,17 @@ catch (NullPointerException e)
         }
 
         if (waitUntilResume(mBindAllApplicationsRunnable, true)) {
+            Log.i("ssss","mTmpAppsList = apps");
             mTmpAppsList = apps;
             return;
         }
 
         if (mAppsView != null) {
+            Log.i("ssss","mAppsView != null");
             mAppsView.setApps(apps);
         }
 
+        Log.i("ssss","bindAllApplication "+(mLauncherCallbacks != null));
         if (mLauncherCallbacks != null) {
             mLauncherCallbacks.bindAllApplications(apps);
         }

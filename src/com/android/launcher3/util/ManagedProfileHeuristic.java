@@ -309,6 +309,7 @@ public class ManagedProfileHeuristic {
                 LauncherFiles.MANAGED_USER_PREFERENCES_KEY,
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
+        Log.i("ssss","prefs = "+ prefs.getAll().keySet().toString());
         for (String key : prefs.getAll().keySet()) {
             if (!validKeys.contains(key)) {
                 editor.remove(key);

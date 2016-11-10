@@ -40,7 +40,6 @@ public class FreezeModelImpl implements IFreezeModel {
         ContentResolver contentResolver = mContext.getContentResolver();
         Uri uri = Uri.parse(URI);
         Cursor cursor = contentResolver.query(uri, null, null, null, null);
-        Log.i(TAG, "size0 = " + freezeAppInfoList.size());
         freezeAppInfoList.clear();
         AppInfo appInfo;
         if (cursor != null) {
@@ -48,7 +47,7 @@ public class FreezeModelImpl implements IFreezeModel {
                 int cursorIndex = cursor
                         .getColumnIndex(FreezeProvider.FREEZE_PACKAGE_NAME);
                 String packageName = cursor.getString(cursorIndex);
-                String intent = cursor.getString(cursorIndex+1);
+                String intent = cursor.getString(cursorIndex + 1);
                 ApplicationInfo applicationInfo = mAdapter.getApplicationInfo(
                         packageName, 0);
                 if (applicationInfo != null) {
@@ -56,16 +55,17 @@ public class FreezeModelImpl implements IFreezeModel {
                     appInfo.applicationInfo = applicationInfo;
                     appInfo.title = applicationInfo.loadLabel(mContext.getPackageManager());
                     try {
-                        appInfo.intent = Intent.parseUri(intent,0);
+                        appInfo.intent = Intent.parseUri(intent, 0);
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
                     freezeAppInfoList.add(appInfo);
+                    Log.w("ssss", "freezeAppInfoList.size = " + freezeAppInfoList.size());
                 }
             }
             cursor.close();
         }
-        Log.i(TAG,"size1 = "+freezeAppInfoList.size());
+        Log.i(TAG, "size1 = " + freezeAppInfoList.size());
         return freezeAppInfoList;
     }
 
@@ -88,20 +88,20 @@ public class FreezeModelImpl implements IFreezeModel {
                 .getInstance(mContext);
         ContentResolver contentResolver = mContext.getContentResolver();
         String packageName = null;
-        if(appInfo.componentName != null){
+        if (appInfo.componentName != null) {
             packageName = appInfo.componentName.getPackageName();
-        }else if(appInfo.applicationInfo != null){
+        } else if (appInfo.applicationInfo != null) {
             packageName = appInfo.applicationInfo.packageName;
         }
         Uri uri = Uri.parse(URI);
         ContentValues values = new ContentValues();
         values.put(FreezeProvider.FREEZE_PACKAGE_NAME, "" + packageName);
-        Log.i("mApps","" + appInfo.intent);
+        Log.i("mApps", "" + appInfo.intent);
         values.put("intent", "" + appInfo.intent);
         contentResolver.insert(uri, values);
 
-        String intent = ""+appInfo.getIntent();
-        if(intent.length()>5){
+        String intent = "" + appInfo.getIntent();
+        if (intent.length() > 5) {
             Launcher.freeze.add(new ShortcutInfo(appInfo));
         }
 
@@ -110,6 +110,7 @@ public class FreezeModelImpl implements IFreezeModel {
         appInfo.applicationInfo = mAdapter.getApplicationInfo(
                 packageName, 0);
         freezeAppInfoList.add(appInfo);
+        Log.w("ssss", "freezeAppInfoList = " + freezeAppInfoList.size());
     }
 
     @Override
