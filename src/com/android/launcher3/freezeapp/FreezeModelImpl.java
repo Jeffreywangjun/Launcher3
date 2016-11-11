@@ -40,8 +40,8 @@ public class FreezeModelImpl implements IFreezeModel {
         ContentResolver contentResolver = mContext.getContentResolver();
         Uri uri = Uri.parse(URI);
         Cursor cursor = contentResolver.query(uri, null, null, null, null);
-        freezeAppInfoList.clear();
         AppInfo appInfo;
+        freezeAppInfoList.clear();
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 int cursorIndex = cursor
@@ -101,16 +101,13 @@ public class FreezeModelImpl implements IFreezeModel {
         contentResolver.insert(uri, values);
 
         String intent = "" + appInfo.getIntent();
-        if (intent.length() > 5) {
-            Launcher.freeze.add(new ShortcutInfo(appInfo));
-        }
-
         mAdapter.setApplicationDisable(packageName);
-
         appInfo.applicationInfo = mAdapter.getApplicationInfo(
                 packageName, 0);
-        freezeAppInfoList.add(appInfo);
-        Log.w("ssss", "freezeAppInfoList = " + freezeAppInfoList.size());
+        if (intent.length() > 5) {
+            Launcher.freeze.add(new ShortcutInfo(appInfo));
+            freezeAppInfoList.add(appInfo);
+        }
     }
 
     @Override
