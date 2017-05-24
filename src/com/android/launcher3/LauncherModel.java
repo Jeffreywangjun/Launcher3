@@ -2624,7 +2624,7 @@ public class LauncherModel extends BroadcastReceiver
                 LongArrayMap<FolderInfo> otherScreenFolders) {
 
             int total = folders.size();
-            Log.i("LauncherModel","folders.size() = "+folders.size());
+            Log.i("LauncherModel", "folders.size() = " + folders.size());
             for (int i = 0; i < total; i++) {
                 long id = folders.keyAt(i);
                 FolderInfo folder = folders.valueAt(i);
@@ -3042,32 +3042,6 @@ public class LauncherModel extends BroadcastReceiver
                     // This builds the icon bitmaps.
                     mBgAllAppsList.add(new AppInfo(mContext, app, user, mIconCache));
                 }
-
-                final ManagedProfileHeuristic heuristic = ManagedProfileHeuristic.get(mContext, user);
-                if (heuristic != null) {
-                    final Runnable r = new Runnable() {
-
-                        @Override
-                        public void run() {
-                            heuristic.processUserApps(apps);
-                        }
-                    };
-                    runOnMainThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            // Check isLoadingWorkspace on the UI thread, as it is updated on
-                            // the UI thread.
-                            if (mIsLoadingAndBindingWorkspace) {
-                                synchronized (mBindCompleteRunnables) {
-                                    mBindCompleteRunnables.add(r);
-                                }
-                            } else {
-                                runOnWorkerThread(r);
-                            }
-                        }
-                    });
-                }
             }
             // Huh? Shouldn't this be inside the Runnable below?
             final ArrayList<AppInfo> added = mBgAllAppsList.added;
@@ -3080,6 +3054,7 @@ public class LauncherModel extends BroadcastReceiver
 
                     final long bindTime = SystemClock.uptimeMillis();
                     final Callbacks callbacks = tryGetCallbacks(oldCallbacks);
+                    Log.i("ssss",(callbacks != null)+"--"+bindTime);
                     if (callbacks != null) {
                         callbacks.bindAllApplications(added);
                         if (DEBUG_LOADERS) {
@@ -3092,6 +3067,7 @@ public class LauncherModel extends BroadcastReceiver
                 }
             });
             // Cleanup any data stored for a deleted user.
+            Log.i("ssss","profiles = "+profiles.toString());
             ManagedProfileHeuristic.processAllUsers(profiles, mContext);
 
             loadAndBindWidgetsAndShortcuts(tryGetCallbacks(oldCallbacks), true /* refresh */);

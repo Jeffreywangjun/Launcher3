@@ -235,6 +235,15 @@ public class FreezeActivity extends BaseActivity implements IFreezeView {
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
+        AppInfo app = null;
+        if (packageName != null) {
+            ApplicationInfo appInfo = FreezePackageManagerAdapter.getInstance(FreezeActivity.this).getApplicationInfo(
+                    packageName, 0);
+            app = new AppInfo();
+            app.applicationInfo = appInfo;
+            app.title = appInfo.loadLabel(this.getPackageManager());
+            presenter.addFreezeApp(app);
+        }
         getLoaderManager().initLoader(LOADER_ID_FREEZED_APP,
                 null, freezeAppCallbacks);
         getLoaderManager().initLoader(LOADER_ID_NORMAL_APP,
@@ -244,16 +253,6 @@ public class FreezeActivity extends BaseActivity implements IFreezeView {
             showNormalFragment(false);
         } else {
             hideNormalFragment(false);
-        }
-        AppInfo app = null;
-        if (packageName != null) {
-            ApplicationInfo appInfo = FreezePackageManagerAdapter.getInstance(FreezeActivity.this).getApplicationInfo(
-                    packageName, 0);
-            app = new AppInfo();
-            app.applicationInfo = appInfo;
-            app.title = appInfo.loadLabel(this.getPackageManager());
-//            app.iconDrawable = appInfo.loadIcon(this.getPackageManager());
-            presenter.addFreezeApp(app);
         }
     }
 
