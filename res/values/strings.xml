@@ -279,7 +279,7 @@
     <string name="musicname">优雅音乐，享受优雅</string>
     <string name="sinername">优雅音乐</string>
     <string name="about">关于</string>
-
+    <string name="clock">时钟</string>
     <array name="album_options">
         <item>Song List</item>
         <item>Change Album Art</item>

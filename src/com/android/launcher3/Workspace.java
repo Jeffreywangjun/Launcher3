@@ -38,6 +38,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -2180,7 +2181,7 @@ int NavigationBar_H= getNavigationBarHeight();//add by lihuachun
             }
             setImportantForAccessibility((mState == State.NORMAL || mState == State.OVERVIEW)
                     ? IMPORTANT_FOR_ACCESSIBILITY_AUTO
-                            : IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+                    : IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
         } else {
             int accessible = mState == State.NORMAL ?
                     IMPORTANT_FOR_ACCESSIBILITY_AUTO :
@@ -2393,6 +2394,7 @@ int NavigationBar_H= getNavigationBarHeight();//add by lihuachun
         startDrag(cellInfo, false);
     }
 
+
     @Override
     public void startDrag(CellLayout.CellInfo cellInfo, boolean accessible) {
         View child = cellInfo.cell;
@@ -2510,9 +2512,9 @@ int NavigationBar_H= getNavigationBarHeight();//add by lihuachun
         }
 
         DragView dv = mDragController.startDrag(b, dragLayerX, dragLayerY, source, child.getTag(),
-                DragController.DRAG_ACTION_MOVE, dragVisualizeOffset, dragRect, scale, accessible);
+                    DragController.DRAG_ACTION_MOVE, dragVisualizeOffset, dragRect, scale, accessible);
         dv.setIntrinsicIconScaleFactor(source.getIntrinsicIconScaleFactor());
-
+			
         b.recycle();
     }
 
@@ -2717,6 +2719,7 @@ int NavigationBar_H= getNavigationBarHeight();//add by lihuachun
                     + targetCell[1] + ", external = " + external + ", dragView = " + dragView
                     + ", v = " + v + ", mCreateUserFolderOnDrop = " + mCreateUserFolderOnDrop);
         }
+Log.e("qwe", "dragView:"+dragView);
 
         boolean hasntMoved = false;
         if (mDragInfo != null) {
@@ -5060,4 +5063,135 @@ int NavigationBar_H= getNavigationBarHeight();//add by lihuachun
     }
     // Add by yeyu for screen edit 20160910 end
 
+// Dynamic_clock_icon  start
+    public void startDragclock(CellLayout.CellInfo cellInfo) {
+        startDragclock(cellInfo, false);
+    }
+
+    public void startDragclock(CellLayout.CellInfo cellInfo, boolean accessible) {
+        View child = cellInfo.cell;
+        if (LauncherLog.DEBUG_DRAG) {
+            LauncherLog.d(TAG, "startDrag cellInfo = " + cellInfo + ",child = " + child);
+        }
+
+        /// M: [ALPS01263567] Abnormal case, if user long press on all apps button and then
+        /// long press on other shortcuts in hotseat, the dragInfo will be
+        /// null, exception will happen, so need return directly.
+        if (child != null && child.getTag() == null) {
+            LauncherLog.d(TAG, "Abnormal start drag: cellInfo = " + cellInfo + ",child = " + child);
+            return;
+        }
+
+        // Make sure the drag was started by a long press as opposed to a long click.
+        if (!child.isInTouchMode()) {
+            if (LauncherLog.DEBUG) {
+                LauncherLog.i(TAG, "The child " + child + " is not in touch mode.");
+            }
+            return;
+        }
+
+        ///M : ALPS02375941
+        boolean isValid = (child.getParent().getParent()) instanceof CellLayout;
+        if (!isValid) {
+            return ;
+        }
+
+        mDragInfo = cellInfo;
+        child.setVisibility(INVISIBLE);
+        CellLayout layout = (CellLayout) child.getParent().getParent();
+        layout.prepareChildForDrag(child);
+
+        beginDragSharedclock(child, this, accessible);
+    }
+
+    public void beginDragSharedclock(View child, DragSource source, boolean accessible) {
+        beginDragSharedclock(child, new Point(), source, accessible);
+    }
+
+    public void beginDragSharedclock(View child, Point relativeTouchPos, DragSource source,
+                                boolean accessible) {
+        child.clearFocus();
+        child.setPressed(false);
+
+        // The outline is used to visualize where the item will land if dropped
+        mDragOutline = createDragOutline(child, DRAG_BITMAP_PADDING);
+
+        mLauncher.onDragStarted(child);
+        // The drag bitmap follows the touch point around on the screen
+        AtomicInteger padding = new AtomicInteger(DRAG_BITMAP_PADDING);
+        final Bitmap b = createDragBitmap(child, padding);
+
+        final int bmpWidth = b.getWidth();
+        final int bmpHeight = b.getHeight();
+
+        float scale = mLauncher.getDragLayer().getLocationInDragLayer(child, mTempXY);
+        int dragLayerX = Math.round(mTempXY[0] - (bmpWidth - scale * child.getWidth()) / 2);
+        int dragLayerY = Math.round(mTempXY[1] - (bmpHeight - scale * bmpHeight) / 2
+                - padding.get() / 2);
+        if (LauncherLog.DEBUG_DRAG) {
+            LauncherLog.d(TAG, "beginDragShared: child = " + child + ", source = " + source
+                    + ", dragLayerX = " + dragLayerX + ", dragLayerY = " + dragLayerY);
+        }
+
+        DeviceProfile grid = mLauncher.getDeviceProfile();
+        Point dragVisualizeOffset = null;
+        Rect dragRect = null;
+        if (child instanceof BubbleTextView) {
+            BubbleTextView icon = (BubbleTextView) child;
+            int iconSize = grid.iconSizePx;
+            int top = child.getPaddingTop();
+            int left = (bmpWidth - iconSize) / 2;
+            int right = left + iconSize;
+            int bottom = top + iconSize;
+            if (icon.isLayoutHorizontal()) {
+                // If the layout is horizontal, then if we are just picking up the icon, then just
+                // use the child position since the icon is top-left aligned.  Otherwise, offset
+                // the drag layer position horizontally so that the icon is under the current
+                // touch position.
+                if (icon.getIcon().getBounds().contains(relativeTouchPos.x, relativeTouchPos.y)) {
+                    dragLayerX = Math.round(mTempXY[0]);
+                } else {
+                    dragLayerX = Math.round(mTempXY[0] + relativeTouchPos.x - (bmpWidth / 2));
+                }
+            }
+            dragLayerY += top;
+            // Note: The drag region is used to calculate drag layer offsets, but the
+            // dragVisualizeOffset in addition to the dragRect (the size) to position the outline.
+            dragVisualizeOffset = new Point(-padding.get() / 2, padding.get() / 2);
+            dragRect = new Rect(left, top, right, bottom);
+        } else if (child instanceof FolderIcon) {
+            int previewSize = grid.folderIconSizePx;
+            dragVisualizeOffset = new Point(-padding.get() / 2,
+                    padding.get() / 2 - child.getPaddingTop());
+            dragRect = new Rect(0, child.getPaddingTop(), child.getWidth(), previewSize);
+        }
+
+        // Clear the pressed state if necessary
+        if (child instanceof BubbleTextView) {
+            BubbleTextView icon = (BubbleTextView) child;
+            icon.clearPressedBackground();
+        }
+
+        if (child.getTag() == null || !(child.getTag() instanceof ItemInfo)) {
+            String msg = "Drag started with a view that has no tag set. This "
+                    + "will cause a crash (issue 11627249) down the line. "
+                    + "View: " + child + "  tag: " + child.getTag();
+            throw new IllegalStateException(msg);
+        }
+
+        if (child.getParent() instanceof ShortcutAndWidgetContainer) {
+            mDragSourceInternal = (ShortcutAndWidgetContainer) child.getParent();
+        }
+        Intent intent=new Intent();
+
+        ComponentName component = intent.getComponent();
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.android_clock_dial);
+        DragView dv = mDragController.startDrag(bitmap, dragLayerX, dragLayerY, source, child.getTag(),
+                DragController.DRAG_ACTION_MOVE, dragVisualizeOffset, dragRect, scale, accessible);
+        dv.setIntrinsicIconScaleFactor(source.getIntrinsicIconScaleFactor());
+
+        b.recycle();
+    }
+// Dynamic_clock_icon  end
 }

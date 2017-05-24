@@ -29,7 +29,7 @@ import com.android.launcher3.compat.UserManagerCompat;
 import com.android.launcher3.util.ComponentKey;
 import com.pinyinsearch.model.PinyinSearchUnit;
 import com.pinyinsearch.util.PinyinUtil;
-
+import com.android.launcher3.IconClock.*;  // Dynamic_clock_icon
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -109,7 +109,12 @@ public class AppInfo extends ItemInfo {
     protected Intent getRestoredIntent() {
         return null;
     }
-
+// Dynamic_clock_icon  begin
+    public IconScript getScript(IconCache iconCache){  
+         return iconCache.getScript(intent, user);
+    // return iconCache.getScript(promisedIntent != null ? promisedIntent : intent, user);  
+    }
+// Dynamic_clock_icon  end
     /**
      * Must not hold the Context.
      */

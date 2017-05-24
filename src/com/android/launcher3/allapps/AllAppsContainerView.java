@@ -467,9 +467,20 @@ public class AllAppsContainerView extends BaseContainerView implements DragSourc
                 mLauncher.getWorkspace().isSwitchingState()) return false;
         // Return if global dragging is not enabled
         if (!mLauncher.isDraggingEnabled()) return false;
-
+		
+// Dynamic_clock_icon  start
+	/*
+	the original code
+	mLauncher.getWorkspace().beginDragShared(v, mIconLastTouchPos, this, false);
+	*/
+        ItemInfo info = (ItemInfo) v.getTag();
+        String info1=info.getIntent().getComponent().getPackageName();
+        if(info1.equals("com.android.deskclock")){
         // Start the drag
-        mLauncher.getWorkspace().beginDragShared(v, mIconLastTouchPos, this, false);
+        mLauncher.getWorkspace().beginDragSharedclock(v, mIconLastTouchPos, this, false);}
+        else{
+            mLauncher.getWorkspace().beginDragShared(v, mIconLastTouchPos, this, false);}
+// Dynamic_clock_icon  end
         // Enter spring loaded mode
         mLauncher.enterSpringLoadedDragMode();
 

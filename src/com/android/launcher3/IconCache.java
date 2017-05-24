@@ -53,7 +53,7 @@ import com.android.launcher3.compat.UserManagerCompat;
 import com.android.launcher3.model.PackageItemInfo;
 import com.android.launcher3.util.ComponentKey;
 import com.android.launcher3.util.Thunk;
-
+import com.android.launcher3.IconClock.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -87,6 +87,9 @@ public class IconCache {
         public CharSequence title = "";
         public CharSequence contentDescription = "";
         public boolean isLowResIcon;
+// Dynamic_clock_icon  start
+        IconScript  script; 
+// Dynamic_clock_icon  end
     }
 
     private final HashMap<UserHandleCompat, Bitmap> mDefaultIcons = new HashMap<>();
@@ -138,6 +141,19 @@ public class IconCache {
         mLowResOptions.inPreferredConfig = Bitmap.Config.RGB_565;
         updateSystemStateString();
     }
+// Dynamic_clock_icon start
+    public IconScript getScript(Intent intent, UserHandleCompat user){
+        synchronized (mCache) {
+            ComponentName component = intent.getComponent();
+            if (component == null) {
+                return null;
+            }
+            LauncherActivityInfoCompat launcherActInfo = mLauncherApps.resolveActivity(intent, user);
+            CacheEntry entry = cacheLocked(component, launcherActInfo,  user, true, true);
+            return entry.script;
+        }
+    }
+// Dynamic_clock_icon  end
 
     private Drawable getFullResDefaultActivityIcon() {
         return getFullResIcon(Resources.getSystem(), android.R.mipmap.sym_def_app_icon);
@@ -550,6 +566,19 @@ public class IconCache {
 
         ComponentKey cacheKey = new ComponentKey(componentName, user);
         CacheEntry entry = mCache.get(cacheKey);
+// Dynamic_clock_icon  start
+        try {
+            if(componentName.getPackageName().equals("com.android.deskclock"))  {
+                Log.d("lihuachun","com.android.deskclock before");
+                ClockScript clockscript=new ClockScript(mContext);
+                entry.script = clockscript;
+   
+                Log.d("lihuachun","com.android.deskclock after");
+            }
+        }
+        catch(Exception e){
+        }
+// Dynamic_clock_icon  end
         if (entry == null || (entry.isLowResIcon && !useLowResIcon)) {
             entry = new CacheEntry();
             mCache.put(cacheKey, entry);
@@ -588,6 +617,15 @@ public class IconCache {
                 entry.contentDescription = mUserManager.getBadgedLabelForUser(entry.title, user);
             }
         }
+// Dynamic_clock_icon start
+        try {
+            if(componentName.getPackageName().equals("com.android.deskclock"))  {
+            //   entry.title=" ";
+            }
+        }
+        catch(Exception e){
+        }
+// Dynamic_clock_icon  end
         return entry;
     }
 

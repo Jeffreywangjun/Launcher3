@@ -147,7 +147,8 @@ try {
 			if (last_song < 0) {
 				last_song = (musiclist.size() - 1);
 			}
-			playMusic(last_song);
+			if(last_song>0){
+			playMusic(last_song);}
 			widgetUpdate();
 		}
 		return super.onStartCommand(intent, flags, startId);
@@ -358,7 +359,8 @@ try {
 			try {
 				current = mPlayer.getCurrentPosition();
 				total = mPlayer.getDuration();
-				degree = (int) (current * 360 / total);
+				if(current!=0){
+				degree = (int) (current * 360 / total);}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

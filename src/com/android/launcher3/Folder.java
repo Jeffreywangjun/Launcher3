@@ -280,16 +280,31 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
         if (!mLauncher.isDraggingEnabled()) return true;
         return beginDrag(v, false);
     }
+	
 
     private boolean beginDrag(View v, boolean accessible) {
         Object tag = v.getTag();
         if (tag instanceof ShortcutInfo) {
-            ShortcutInfo item = (ShortcutInfo) tag;
-            if (!v.isInTouchMode()) {
-                return false;
-            }
-            mLauncher.getWorkspace().beginDragShared(v, new Point(), this, accessible);
+                ShortcutInfo item = (ShortcutInfo) tag;
+                if (!v.isInTouchMode()) {
+                    return false;
+                }
+	// Dynamic_clock_icon  start
+	/*
+		the original code 
+		 mLauncher.getWorkspace().beginDragShared(v, new Point(), this, accessible);
+	*/
+            ItemInfo info1= (ItemInfo) v.getTag();
+            String info2=info1.getIntent().getComponent().getPackageName();
 
+            if (info2.equals("com.android.deskclock")) {
+                mLauncher.getWorkspace().beginDragSharedclock(v, new Point(), this, accessible);
+            } else {
+                mLauncher.getWorkspace().beginDragShared(v, new Point(), this, accessible);
+
+            }
+	// Dynamic_clock_icon  end
+            Log.e("qqqq:","11222");
             mCurrentDragInfo = item;
             mEmptyCellRank = item.rank;
             mCurrentDragView = v;
@@ -380,6 +395,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        mLauncher.closeFolder();//Add DELSLMY-1850 for folder open match screen by zhaopenglin
         return true;
     }
 
@@ -532,7 +548,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
 
             int rx = (int) Math.max(Math.max(width - getPivotX(), 0), getPivotX());
             int ry = (int) Math.max(Math.max(height - getPivotY(), 0), getPivotY());
-            float radius = (float) Math.hypot(rx, ry);
+            float radius = (float) Math.hypot(rx, ry) * 2;//modify DELSLMY-1850 for folder open match screen by zhaopengli
             /**M: [Changes]If the hardware is accelerated, then allow to use Reveal animator.@{**/
             boolean isHardwareAccelerated = this.isHardwareAccelerated();
             Animator reveal = null;

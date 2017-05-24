@@ -3826,10 +3826,36 @@ catch (NullPointerException e)
                         mHotseat.getOrderInHotseat(
                                 longClickCellInfo.cellX,
                                 longClickCellInfo.cellY));
+// Dynamic_clock_icon  start
+/* the original code 
                 if (!(itemUnderLongClick instanceof Folder || isAllAppsButton)) {
                     // User long pressed on an item
                     mWorkspace.startDrag(longClickCellInfo);
                 }
+
+*/
+                if (!(itemUnderLongClick instanceof Folder ||isAllAppsButton)) {
+                    // User long pressed on an item
+
+                    ItemInfo info = (ItemInfo) v.getTag();
+                    CharSequence    title=info.title;
+                    Log.e("lhc","title:"+title+","+""+"contentDescription:"+info.contentDescription+","+"itemType"+info.itemType+","
+                    +"container:"+info.container
+                    );
+                    if(itemUnderLongClick instanceof BubbleTextView ) {
+                        ItemInfo info1= (ItemInfo) v.getTag();
+              	    String info2=info1.getIntent().getComponent().getPackageName();
+                        if (info2.equals("com.android.deskclock")) {
+                            mWorkspace.startDragclock(longClickCellInfo);
+                        } else {
+                            mWorkspace.startDrag(longClickCellInfo);
+                        }
+                    } else {
+                            mWorkspace.startDrag(longClickCellInfo);
+                    }
+// Dynamic_clock_icon  end
+                }
+
             }
         }
         return true;

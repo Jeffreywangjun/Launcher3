@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.android.launcher3.IconClock.IconScript;
 import com.android.launcher3.LauncherSettings.Favorites;
 import com.android.launcher3.compat.LauncherActivityInfoCompat;
 import com.android.launcher3.compat.UserHandleCompat;
@@ -302,5 +303,11 @@ public class ShortcutInfo extends ItemInfo {
         shortcut.firstInstallTime = info.getFirstInstallTime();
         return shortcut;
     }
+
+// Dynamic_clock_icon  start
+    public IconScript getScript(IconCache iconCache){
+        return iconCache.getScript(promisedIntent != null ? promisedIntent : intent, user);
+    }
+// Dynamic_clock_icon  end
 }
 

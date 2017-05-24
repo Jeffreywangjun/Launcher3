@@ -16,9 +16,12 @@
 
 package com.android.launcher3;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -27,6 +30,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.util.SparseArray;
 
 /**
@@ -45,7 +49,7 @@ public class HolographicOutlineHelper {
     private final BlurMaskFilter mMediumOuterBlurMaskFilter;
     private final BlurMaskFilter mThinOuterBlurMaskFilter;
     private final BlurMaskFilter mMediumInnerBlurMaskFilter;
-
+    Context context1;
     private final BlurMaskFilter mShadowBlurMaskFilter;
 
     // We have 4 different icon sizes: homescreen, hotseat, folder & all-apps
@@ -53,7 +57,7 @@ public class HolographicOutlineHelper {
 
     private HolographicOutlineHelper(Context context) {
         Resources res = context.getResources();
-
+        context1 =context;
         float mediumBlur = res.getDimension(R.dimen.blur_size_medium_outline);
         mMediumOuterBlurMaskFilter = new BlurMaskFilter(mediumBlur, BlurMaskFilter.Blur.OUTER);
         mMediumInnerBlurMaskFilter = new BlurMaskFilter(mediumBlur, BlurMaskFilter.Blur.NORMAL);
@@ -156,6 +160,15 @@ public class HolographicOutlineHelper {
     }
 
     Bitmap createMediumDropShadow(BubbleTextView view) {
+Log.e("LHC", "AAAAAA1");
+       /* Intent intent=new Intent();
+
+        ComponentName component = intent.getComponent();
+        if(component.getPackageName()!=null&&component.getPackageName().equals("com.android.deskclock")){
+            Bitmap bitmap = BitmapFactory.decodeResource(context1.getResources(), R.drawable.android_clock_dial);
+            return bitmap;
+        }
+        */
         Drawable icon = view.getIcon();
         if (icon == null) {
             return null;
@@ -172,21 +185,23 @@ public class HolographicOutlineHelper {
         int key = (bitmapWidth << 16) | bitmapHeight;
         Bitmap cache = mBitmapCache.get(key);
         if (cache == null) {
+            Log.e("LHC", "AAAAAA2");
             cache = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
             mCanvas.setBitmap(cache);
             mBitmapCache.put(key, cache);
         } else {
+            Log.e("LHC", "AAAAAA3");
             mCanvas.setBitmap(cache);
             mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         }
-
+        Log.e("LHC", "AAAAAA4");
         mCanvas.save(Canvas.MATRIX_SAVE_FLAG);
         mCanvas.scale(view.getScaleX(), view.getScaleY());
         mCanvas.translate(-rect.left, -rect.top);
         icon.draw(mCanvas);
         mCanvas.restore();
         mCanvas.setBitmap(null);
-
+        Log.e("LHC", "AAAAAA5");
         mBlurPaint.setMaskFilter(mShadowBlurMaskFilter);
         return cache.extractAlpha(mBlurPaint, null);
     }

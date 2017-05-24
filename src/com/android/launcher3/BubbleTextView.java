@@ -30,12 +30,12 @@ import android.content.res.Resources.Theme;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.graphics.Paint;
 import android.graphics.Region;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -48,8 +48,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import com.android.launcher3.IconCache.IconLoadRequest;
+import com.android.launcher3.IconClock.IconScript;
 import com.android.launcher3.model.PackageItemInfo;
-
 import com.mediatek.launcher3.ext.LauncherLog;
 
 /**
@@ -61,7 +61,7 @@ public class BubbleTextView extends TextView
         implements BaseRecyclerViewFastScrollBar.FastScrollFocusableView {
     private static final String TAG = "Launcher3.BubbleTextView";
     private static SparseArray<Theme> sPreloaderThemes = new SparseArray<Theme>(2);
-
+    public IconScript  mScript;  // Dynamic_clock_icon  
     private static final float SHADOW_LARGE_RADIUS = 4.0f;
     private static final float SHADOW_SMALL_RADIUS = 1.75f;
     private static final float SHADOW_Y_OFFSET = 2.0f;
@@ -174,14 +174,39 @@ public class BubbleTextView extends TextView
     public void applyFromShortcutInfo(ShortcutInfo info, IconCache iconCache) {
         applyFromShortcutInfo(info, iconCache, false);
     }
+// Dynamic_clock_icon  start
+    public void setCompoundDrawables(Drawable left, Drawable top,
+                                     Drawable right, Drawable bottom) {
 
+        Log.d("lihuachun", "BubbleTextView:setCompoundDrawables before");
+
+        if (top != null) {
+            if (mScript != null) {
+                top = mScript;
+                try {
+                    mScript.setBounds(top.getBounds());
+                } catch (Exception e) {
+                }
+                if (!mScript.isRuning)
+                    mScript.run(this);
+            }
+        }
+        Log.d("lihuachun", "BubbleTextView:setCompoundDrawables after");
+        super.setCompoundDrawables(left, top, right, bottom);
+    }
+// Dynamic_clock_icon  end
     public void applyFromShortcutInfo(ShortcutInfo info, IconCache iconCache,
             boolean promiseStateChanged) {
         Bitmap b = info.getIcon(iconCache);
 
         FastBitmapDrawable iconDrawable = mLauncher.createIconDrawable(b);
         iconDrawable.setGhostModeEnabled(info.isDisabled != 0);
-
+     // Dynamic_clock_icon  start
+        mScript = info.getScript(iconCache);
+        if(mScript != null) {
+			mScript.setFastBitmapDrawable(iconDrawable);
+        }
+      // Dynamic_clock_icon  end
         setIcon(iconDrawable, mIconSize);
         if (info.contentDescription != null) {
             setContentDescription(info.contentDescription);
@@ -195,6 +220,14 @@ public class BubbleTextView extends TextView
     }
 
     public void applyFromApplicationInfo(AppInfo info) {
+	// Dynamic_clock_icon  start
+      //  Bitmap b = info.getIcon(iconCache);
+
+      //  FastBitmapDrawable iconDrawable = mLauncher.createIconDrawable(b);
+        
+        mScript = info.getScript(LauncherAppState.getInstance().getIconCache());
+        if(mScript != null) mScript.setFastBitmapDrawable(mLauncher.createIconDrawable(info.iconBitmap));
+        // Dynamic_clock_icon  end
         setIcon(mLauncher.createIconDrawable(info.iconBitmap), mIconSize);
         setText(info.title);
         if (info.contentDescription != null) {
@@ -319,6 +352,7 @@ public class BubbleTextView extends TextView
     }
 
     void setStayPressed(boolean stayPressed) {
+        Log.e("LHC","AAAA");
         mStayPressed = stayPressed;
         if (!stayPressed) {
             mPressedBackground = null;
